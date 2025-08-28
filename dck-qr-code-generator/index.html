@@ -4,29 +4,110 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+    <!-- https://play.tailwindcss.com/ -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
     <link rel="shortcut icon" href="favicon.png" type="image/png" />
     <link rel="stylesheet" href="styles.css" />
     <title>QR Code Generator</title>
   </head>
   <body class="fixed inset-0 flex justify-center items-center overflow-hidden">
-    
-<button id="pasteBtn">Paste Text</button>
-<p id="output"></p>
+    <div
+      class="text-center absolute top-10 left-1/2 -translate-x-1/2 w-96 text-gray-400 text-sm uppercase"
+    >
+      <div class="text-xs">DCK Simulation</div>
+      <div>QR Code Generator</div>
+    </div>
 
-<script>
-  const btn = document.getElementById('pasteBtn');
-  const out = document.getElementById('output');
+    <div class="relative">
+      <div
+        id="text-hint"
+        class="text-center absolute -top-5 -translate-x-1/2 left-1/2 text-sm text-gray-500 w-[300px] truncate hidden"
+      ></div>
 
-  btn.addEventListener('click', async () => {
-    try {
-      const text = await navigator.clipboard.readText();
-      out.textContent = text || '(Clipboard empty)';
-    } catch (err) {
-      out.textContent = 'Failed: ' + err;
-    }
-  });
-</script>
+      <div
+        id="qr-box"
+        style="
+          box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+            rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+        "
+        class="bg-gray-50 mt-2 w-[300px] h-[300px] rounded-lg overflow-hidden hover:bg-gray-100 cursor-pointer active:bg-gray-100 sm:active:bg-gray-200 flex justify-center items-center select-none"
+      >
+        <div id="qr-label">
+          <div class="font-bold text-gray-600 text-xl text-center">
+            <span>Paste from clipboard</span>
+          </div>
+          <div class="text-gray-500 text-center hidden sm:block">
+            <kbd>(CTRL + V)</kbd>
+          </div>
+        </div>
+      </div>
 
+      <button
+        id="clear-btn"
+        class="hidden text-center absolute -bottom-14 left-1/2 -translate-x-1/2 uppercase p-2 text-gray-600 font-medium underline underline-offset-2 cursor-pointer active:text-gray-600"
+      >
+        clear
+      </button>
+    </div>
+
+    <script>
+      document.addEventListener("touchstart", () => {}, true); // iOS fix
+
+      const box = document.getElementById("qr-box");
+      const label = document.getElementById("qr-label");
+      const clearBtn = document.getElementById("clear-btn");
+      const hint = document.getElementById("text-hint");
+
+      let qr;
+
+      function formatHintText(text) {
+        if (text.length <= 30) return text;
+        return text.slice(0, 15) + "[...]" + text.slice(-15);
+      }
+
+      async function handlePaste() {
+        try {
+          const text = await navigator.clipboard.readText();
+          if (!text.trim()) return;
+
+          box.innerHTML = "";
+          qr = new QRCode(box, {
+            text,
+            width: 300,
+            height: 300,
+            colorDark: "#262626",
+            colorLight: "#f3f4f6",
+          });
+
+          hint.textContent = formatHintText(text);
+          hint.title = text;
+          hint.classList.remove("hidden");
+
+          clearBtn.classList.remove("hidden");
+        } catch (err) {
+          alert("Clipboard read failed. Make sure permissions are granted.");
+          box.innerHTML = "";
+          box.appendChild(label);
+          clearBtn.classList.add("hidden");
+          hint.classList.add("hidden");
+        }
+      }
+
+      box.addEventListener("click", handlePaste);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.ctrlKey && e.key === "v") {
+          e.preventDefault();
+          handlePaste();
+        }
+      });
+
+      clearBtn.addEventListener("click", () => {
+        box.innerHTML = "";
+        box.appendChild(label);
+        clearBtn.classList.add("hidden");
+        hint.classList.add("hidden");
+      });
+    </script>
   </body>
 </html>

@@ -253,6 +253,9 @@
   .inset-0 {
     inset: calc(var(--spacing) * 0);
   }
+  .-top-5 {
+    top: calc(var(--spacing) * -5);
+  }
   .top-10 {
     top: calc(var(--spacing) * 10);
   }
@@ -292,6 +295,11 @@
   }
   .justify-center {
     justify-content: center;
+  }
+  .truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .overflow-hidden {
     overflow: hidden;
