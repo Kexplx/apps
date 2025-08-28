@@ -55,8 +55,7 @@
 
       box.addEventListener("click", async () => {
         try {
-          const text = await navigator.clipboard.readText();
-          if (!text.trim()) return;
+          const text = await waitForClipboard(); // ios fix
 
           box.innerHTML = "";
           qr = new QRCode(box, {
@@ -69,7 +68,9 @@
 
           clearBtn.classList.remove("hidden");
         } catch (err) {
-          alert("Clipboard read failed. Make sure permissions are granted.");
+          alert(
+            "Paste from clipboard failed. Check permissions and try again."
+          );
           box.innerHTML = "";
           box.appendChild(label);
           clearBtn.classList.add("hidden");
@@ -108,6 +109,19 @@
           }
         }
       });
+
+      async function waitForClipboard(maxTries = 30) {
+        for (let i = 0; i < maxTries; i++) {
+          console.log("running");
+          try {
+            const text = await navigator.clipboard.readText();
+            if (text.trim()) return text;
+          } catch (_) {}
+
+          await new Promise((r) => setTimeout(r, 100)); // Wait 100ms and try again
+        }
+        throw new Error("Clipboard unavailable");
+      }
     </script>
   </body>
 </html>
