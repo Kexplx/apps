@@ -6,12 +6,20 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <title>QR Code Generator</title>
-  </head>
-  <body class="text-gray-800 flex flex-col min-h-screen">
-    <p class="text-center font-bold text-2xl mt-8">QR Code Generator</p>
-    <p class="text-center text-gray-500">AUMOVIO DCK Simulation</p>
 
-    <div class="flex-grow flex justify-center items-center">
+    <style></style>
+  </head>
+  <body class="text-gray-800 flex flex-col">
+    <div>
+      <p class="text-center font-bold tracking-tight text-2xl mt-8">
+        QR Code Generator
+      </p>
+      <p class="text-center text-gray-500">AUMOVIO DCK Simulation</p>
+    </div>
+
+    <div
+      class="flex-grow flex justify-center items-center mt-8 rounded-lg overflow-hidden"
+    >
       <div
         id="qrcode"
         class="w-[300px] h-[300px] bg-gray-100 flex items-center justify-center"
@@ -19,25 +27,25 @@
         <span class="text-sm text-gray-400">QR Code will appear here</span>
       </div>
     </div>
-
-    <div class="relative p-4 pb-8">
-      <input
-        type="url"
-        id="urlInput"
-        placeholder="Enter URL"
-        spellcheck="false"
-        autocomplete="off"
-        size="16"
-        class="border bg-gray-50 p-2 pr-16 shadow-inner w-full rounded-lg px-4 border-gray-300 focus:outline-none focus:ring focus:ring-blue-500"
-      />
-      <button
-        class="absolute right-8 top-9.5 tracking-tight -translate-y-1/2 text-[10px] font-medium bg-gray-100 text-gray-500 p-1 rounded active:bg-gray-200"
-        onclick="document.getElementById('urlInput').value=''; document.getElementById('urlInput').dispatchEvent(new Event('input'));"
-      >
-        CLEAR
-      </button>
+    <div class="relative p-4 pb-8 flex justify-center">
+      <div class="relative w-[300px]">
+        <input
+          type="url"
+          id="urlInput"
+          placeholder="Enter URL"
+          spellcheck="false"
+          autocomplete="off"
+          size="16"
+          class="border bg-gray-50 p-2 pr-14 shadow-inner w-full rounded-lg px-4 border-gray-300 focus:outline-none focus:ring focus:ring-blue-500"
+        />
+        <button
+          class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-medium bg-gray-100 text-gray-500 px-2 py-1 rounded active:bg-gray-200"
+          onclick="document.getElementById('urlInput').value=''; document.getElementById('urlInput').dispatchEvent(new Event('input'));"
+        >
+          CLEAR
+        </button>
+      </div>
     </div>
-
     <script>
       const input = document.getElementById("urlInput");
       const container = document.getElementById("qrcode");
@@ -51,6 +59,7 @@
             text: value,
             width: 300,
             height: 300,
+            colorDark: "#1f2937", // Change dark color
           });
         } else {
           container.innerHTML =
