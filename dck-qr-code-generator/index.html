@@ -4,9 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <title>QR Code Generator</title>
-    <!-- <style>
+    <style>
       /*! tailwindcss v4.1.12 | MIT License | https://tailwindcss.com */
       @layer properties;
       @layer theme, base, components, utilities;
@@ -18,6 +16,7 @@
           --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
             "Liberation Mono", "Courier New", monospace;
           --color-blue-500: oklch(62.3% 0.214 259.815);
+          --color-gray-50: oklch(98.5% 0.002 247.839);
           --color-gray-100: oklch(96.7% 0.003 264.542);
           --color-gray-200: oklch(92.8% 0.006 264.531);
           --color-gray-300: oklch(87.2% 0.01 258.338);
@@ -31,6 +30,8 @@
           --text-2xl--line-height: calc(2 / 1.5);
           --font-weight-medium: 500;
           --font-weight-bold: 700;
+          --tracking-tight: -0.025em;
+          --radius-lg: 0.5rem;
           --default-font-family: var(--font-sans);
           --default-mono-font-family: var(--font-mono);
         }
@@ -260,8 +261,8 @@
         .relative {
           position: relative;
         }
-        .top-1\/2 {
-          top: calc(1 / 2 * 100%);
+        .top-9\.5 {
+          top: calc(var(--spacing) * 9.5);
         }
         .right-8 {
           right: calc(var(--spacing) * 8);
@@ -303,19 +304,18 @@
         .rounded {
           border-radius: 0.25rem;
         }
+        .rounded-lg {
+          border-radius: var(--radius-lg);
+        }
         .border {
           border-style: var(--tw-border-style);
           border-width: 1px;
         }
-        .border-t {
-          border-top-style: var(--tw-border-style);
-          border-top-width: 1px;
-        }
-        .border-gray-200 {
-          border-color: var(--color-gray-200);
-        }
         .border-gray-300 {
           border-color: var(--color-gray-300);
+        }
+        .bg-gray-50 {
+          background-color: var(--color-gray-50);
         }
         .bg-gray-100 {
           background-color: var(--color-gray-100);
@@ -331,6 +331,12 @@
         }
         .px-4 {
           padding-inline: calc(var(--spacing) * 4);
+        }
+        .pr-16 {
+          padding-right: calc(var(--spacing) * 16);
+        }
+        .pb-8 {
+          padding-bottom: calc(var(--spacing) * 8);
         }
         .text-center {
           text-align: center;
@@ -354,6 +360,10 @@
           --tw-font-weight: var(--font-weight-medium);
           font-weight: var(--font-weight-medium);
         }
+        .tracking-tight {
+          --tw-tracking: var(--tracking-tight);
+          letter-spacing: var(--tracking-tight);
+        }
         .text-gray-400 {
           color: var(--color-gray-400);
         }
@@ -362,13 +372,6 @@
         }
         .text-gray-800 {
           color: var(--color-gray-800);
-        }
-        .shadow {
-          --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)),
-            0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-          box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow),
-            var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
-            var(--tw-shadow);
         }
         .shadow-inner {
           --tw-shadow: inset 0 2px 4px 0
@@ -425,6 +428,10 @@
         initial-value: solid;
       }
       @property --tw-font-weight {
+        syntax: "*";
+        inherits: false;
+      }
+      @property --tw-tracking {
         syntax: "*";
         inherits: false;
       }
@@ -505,6 +512,7 @@
             --tw-translate-z: 0;
             --tw-border-style: solid;
             --tw-font-weight: initial;
+            --tw-tracking: initial;
             --tw-shadow: 0 0 #0000;
             --tw-shadow-color: initial;
             --tw-shadow-alpha: 100%;
@@ -522,7 +530,8 @@
           }
         }
       }
-    </style> -->
+    </style>
+    <title>QR Code Generator</title>
   </head>
   <body class="text-gray-800 flex flex-col min-h-screen">
     <p class="text-center font-bold text-2xl mt-8">QR Code Generator</p>
@@ -543,13 +552,12 @@
         id="urlInput"
         placeholder="Enter URL"
         spellcheck="false"
-        autofocus
         autocomplete="off"
         size="16"
-        class="border p-2 shadow-inner w-full rounded-lg px-4 border-gray-300 focus:outline-none focus:ring focus:ring-blue-500"
+        class="border bg-gray-50 p-2 pr-16 shadow-inner w-full rounded-lg px-4 border-gray-300 focus:outline-none focus:ring focus:ring-blue-500"
       />
       <button
-        class="absolute right-8 top-9.5 -translate-y-1/2 text-[10px] font-medium bg-gray-100 text-gray-500 p-1 rounded active:bg-gray-200"
+        class="absolute right-8 top-9.5 tracking-tight -translate-y-1/2 text-[10px] font-medium bg-gray-100 text-gray-500 p-1 rounded active:bg-gray-200"
         onclick="document.getElementById('urlInput').value=''; document.getElementById('urlInput').dispatchEvent(new Event('input'));"
       >
         CLEAR
