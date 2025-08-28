@@ -44,7 +44,7 @@
 
       <button
         id="clear-btn"
-        class="hidden text-center absolute -bottom-14 left-1/2 -translate-x-1/2 uppercase p-2 text-gray-600 font-medium underline underline-offset-2 cursor-pointer active:text-gray-600"
+        class="hidden text-center absolute -bottom-14 left-1/2 -translate-x-1/2 uppercase p-2 text-gray-600 font-medium underline underline-offset-2 cursor-pointer active:text-gray-700"
       >
         clear
       </button>
@@ -85,7 +85,7 @@
 
           clearBtn.classList.remove("hidden");
         } catch (err) {
-          alert("Clipboard read failed. Make sure permissions are granted.");
+          alert("Paste from clipboard failed. Check permissions and retry.");
           box.innerHTML = "";
           box.appendChild(label);
           clearBtn.classList.add("hidden");
