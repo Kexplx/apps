@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,12 +9,14 @@
     <link rel="stylesheet" href="styles.css" />
     <title>QR Code Generator</title>
   </head>
-  <body class="fixed inset-0 flex justify-center items-center overflow-hidden">
+  <body
+    class="fixed inset-0 flex justify-center items-center overflow-hidden font-mono"
+  >
     <div
-      class="text-center absolute top-10 left-1/2 -translate-x-1/2 uppercase w-96 text-gray-400 text-sm"
+      class="text-center absolute top-10 left-1/2 -translate-x-1/2 w-96 text-gray-400 text-sm uppercase"
     >
-      <div class="text-xs">Digital Car Key</div>
-      <div>QR Code Generator</div>
+      <div class="text-xs">DCK Simulation</div>
+      <div class="font-bold">QR Code Generator</div>
     </div>
 
     <div class="relative">
@@ -27,10 +29,10 @@
         class="bg-gray-50 mt-2 w-[300px] h-[300px] rounded-lg overflow-hidden hover:bg-gray-100 cursor-pointer active:bg-gray-100 sm:active:bg-gray-200 flex justify-center items-center select-none"
       >
         <div id="qr-label">
-          <div class="font-medium text-gray-600 text-xl text-center">
+          <div class="font-bold text-gray-600 text-xl text-center">
             <span>Paste from clipboard</span>
           </div>
-          <div class="text-gray-500 text-center font-mono hidden sm:block">
+          <div class="text-gray-500 text-center hidden sm:block">
             <kbd>(CTRL + V)</kbd>
           </div>
         </div>
@@ -38,7 +40,7 @@
 
       <button
         id="clear-btn"
-        class="hidden text-center absolute -bottom-14 left-1/2 -translate-x-1/2 uppercase w-96 text-gray-500 font-medium text-sm underline underline-offset-2 cursor-pointer active:text-gray-600"
+        class="hidden text-center absolute -bottom-14 left-1/2 -translate-x-1/2 uppercase p-2 text-gray-500 font-medium underline underline-offset-2 cursor-pointer active:text-gray-600"
       >
         clear
       </button>
