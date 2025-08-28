@@ -10,118 +10,23 @@
     <title>QR Code Generator</title>
   </head>
   <body class="fixed inset-0 flex justify-center items-center overflow-hidden">
-    <div
-      class="text-center absolute top-10 left-1/2 -translate-x-1/2 w-96 text-gray-400 text-sm uppercase"
-    >
-      <div class="text-xs">DCK Simulation</div>
-      <div>QR Code Generator</div>
-    </div>
+    
+<button id="pasteBtn">Paste Text</button>
+<p id="output"></p>
 
-    <div class="relative">
-      <div
-        id="qr-box"
-        style="
-          box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-            rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-        "
-        class="bg-gray-50 mt-2 w-[300px] h-[300px] rounded-lg overflow-hidden hover:bg-gray-100 cursor-pointer active:bg-gray-100 sm:active:bg-gray-200 flex justify-center items-center select-none"
-      >
-        <div id="qr-label">
-          <div class="font-bold text-gray-600 text-xl text-center">
-            <span>Paste from clipboard</span>
-          </div>
-          <div class="text-gray-500 text-center hidden sm:block">
-            <kbd>(CTRL + V)</kbd>
-          </div>
-        </div>
-      </div>
+<script>
+  const btn = document.getElementById('pasteBtn');
+  const out = document.getElementById('output');
 
-      <button
-        id="clear-btn"
-        class="hidden text-center absolute -bottom-14 left-1/2 -translate-x-1/2 uppercase p-2 text-gray-600 font-medium underline underline-offset-2 cursor-pointer active:text-gray-600"
-      >
-        clear
-      </button>
-    </div>
+  btn.addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      out.textContent = text || '(Clipboard empty)';
+    } catch (err) {
+      out.textContent = 'Failed: ' + err;
+    }
+  });
+</script>
 
-    <script>
-      document.addEventListener("touchstart", () => {}, true); // iOS fix
-
-      const box = document.getElementById("qr-box");
-      const label = document.getElementById("qr-label");
-      const clearBtn = document.getElementById("clear-btn");
-
-      let qr;
-
-      box.addEventListener("click", async () => {
-        try {
-          const text = await waitForClipboard(); // ios fix
-
-          box.innerHTML = "";
-          qr = new QRCode(box, {
-            text,
-            width: 300,
-            height: 300,
-            colorDark: "#262626",
-            colorLight: "#f3f4f6",
-          });
-
-          clearBtn.classList.remove("hidden");
-        } catch (err) {
-          alert(
-            "Paste from clipboard failed. Check permissions and try again."
-          );
-          box.innerHTML = "";
-          box.appendChild(label);
-          clearBtn.classList.add("hidden");
-        }
-      });
-
-      clearBtn.addEventListener("click", () => {
-        box.innerHTML = "";
-        box.appendChild(label);
-        clearBtn.classList.add("hidden");
-      });
-
-      document.addEventListener("keydown", async (e) => {
-        if (e.ctrlKey && e.key === "v") {
-          e.preventDefault(); // optional: avoid browser paste behavior
-
-          try {
-            const text = await navigator.clipboard.readText();
-            if (!text.trim()) return;
-
-            box.innerHTML = "";
-            qr = new QRCode(box, {
-              text,
-              width: 300,
-              height: 300,
-              colorDark: "#262626",
-              colorLight: "#f3f4f6",
-            });
-
-            clearBtn.classList.remove("hidden");
-          } catch (err) {
-            alert("Clipboard read failed. Make sure permissions are granted.");
-            box.innerHTML = "";
-            box.appendChild(label);
-            clearBtn.classList.add("hidden");
-          }
-        }
-      });
-
-      async function waitForClipboard(maxTries = 30) {
-        for (let i = 0; i < maxTries; i++) {
-          console.log("running");
-          try {
-            const text = await navigator.clipboard.readText();
-            if (text.trim()) return text;
-          } catch (_) {}
-
-          await new Promise((r) => setTimeout(r, 100)); // Wait 100ms and try again
-        }
-        throw new Error("Clipboard unavailable");
-      }
-    </script>
   </body>
 </html>
