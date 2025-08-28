@@ -15,12 +15,13 @@
     --color-gray-500: oklch(55.1% 0.027 264.364);
     --color-gray-600: oklch(44.6% 0.03 256.802);
     --spacing: 0.25rem;
+    --text-xs: 0.75rem;
+    --text-xs--line-height: calc(1 / 0.75);
     --text-sm: 0.875rem;
     --text-sm--line-height: calc(1.25 / 0.875);
-    --text-lg: 1.125rem;
-    --text-lg--line-height: calc(1.75 / 1.125);
+    --text-xl: 1.25rem;
+    --text-xl--line-height: calc(1.75 / 1.25);
     --font-weight-medium: 500;
-    --tracking-tight: -0.025em;
     --radius-lg: 0.5rem;
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
@@ -242,11 +243,17 @@
   .absolute {
     position: absolute;
   }
+  .fixed {
+    position: fixed;
+  }
   .relative {
     position: relative;
   }
-  .top-5 {
-    top: calc(var(--spacing) * 5);
+  .inset-0 {
+    inset: calc(var(--spacing) * 0);
+  }
+  .top-10 {
+    top: calc(var(--spacing) * 10);
   }
   .-bottom-14 {
     bottom: calc(var(--spacing) * -14);
@@ -265,9 +272,6 @@
   }
   .h-\[300px\] {
     height: 300px;
-  }
-  .h-screen {
-    height: 100vh;
   }
   .w-96 {
     width: calc(var(--spacing) * 96);
@@ -300,21 +304,24 @@
   .text-center {
     text-align: center;
   }
-  .text-lg {
-    font-size: var(--text-lg);
-    line-height: var(--tw-leading, var(--text-lg--line-height));
+  .font-mono {
+    font-family: var(--font-mono);
   }
   .text-sm {
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
   }
+  .text-xl {
+    font-size: var(--text-xl);
+    line-height: var(--tw-leading, var(--text-xl--line-height));
+  }
+  .text-xs {
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+  }
   .font-medium {
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
-  }
-  .tracking-tight {
-    --tw-tracking: var(--tracking-tight);
-    letter-spacing: var(--tracking-tight);
   }
   .text-gray-400 {
     color: var(--color-gray-400);
@@ -355,8 +362,13 @@
       color: var(--color-gray-600);
     }
   }
-  .md\:active\:bg-gray-200 {
-    @media (width >= 48rem) {
+  .sm\:block {
+    @media (width >= 40rem) {
+      display: block;
+    }
+  }
+  .sm\:active\:bg-gray-200 {
+    @media (width >= 40rem) {
       &:active {
         background-color: var(--color-gray-200);
       }
@@ -382,10 +394,6 @@
   syntax: "*";
   inherits: false;
 }
-@property --tw-tracking {
-  syntax: "*";
-  inherits: false;
-}
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or
     ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
@@ -397,7 +405,6 @@
       --tw-translate-y: 0;
       --tw-translate-z: 0;
       --tw-font-weight: initial;
-      --tw-tracking: initial;
     }
   }
 }

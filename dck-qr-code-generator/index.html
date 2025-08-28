@@ -3,10 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script> -->
     <link rel="shortcut icon" href="favicon.png" type="image/png" />
-    <!-- <link rel="stylesheet" href="styles.css" /> -->
+    <link rel="stylesheet" href="styles.css" />
     <title>QR Code Generator</title>
   </head>
   <body class="fixed inset-0 flex justify-center items-center overflow-hidden">
@@ -28,8 +27,7 @@
       >
         <div id="qr-label">
           <div class="font-medium text-gray-600 text-xl text-center">
-            <span class="sm:hidden">Tap to Paste Clipboard</span>
-            <span class="hidden sm:inline">Click to Paste Clipboard</span>
+            <span>Paste from clipboard</span>
           </div>
           <div class="text-gray-500 text-center font-mono hidden sm:block">
             <kbd>(CTRL + V)</kbd>
