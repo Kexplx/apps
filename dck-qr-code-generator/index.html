@@ -10,7 +10,9 @@
     <link rel="stylesheet" href="styles.css" />
     <title>QR Code Generator</title>
   </head>
-  <body class="fixed inset-0 flex justify-center items-center overflow-hidden">
+  <body
+    class="fixed inset-0 flex justify-center items-center overflow-hidden text-gray-800"
+  >
     <div
       class="text-center absolute top-10 left-1/2 -translate-x-1/2 w-96 text-gray-400 text-sm uppercase"
     >
@@ -20,93 +22,81 @@
 
     <div class="relative">
       <div
-        id="text-hint"
-        class="text-center absolute -top-5 -translate-x-1/2 left-1/2 text-sm text-gray-500 w-[300px] truncate hidden"
-      ></div>
+        class="text-center absolute -top-12 -translate-x-1/2 left-1/2 text-sm text-gray-800"
+      >
+        <input
+          type="text"
+          placeholder="Enter URL"
+          autofocus
+          class="bg-gray-50 rounded-lg px-4 py-2 shadow-inner w-[300px] focus:outline-none focus:ring-1 focus:ring-blue-400 border border-gray-300"
+        />
+
+        <button
+          class="absolute right-2 top-1/2 -translate-y-1/2 hidden cursor-pointer active:bg-gray-100 rounded p-1"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="20px"
+            viewBox="0 -960 960 960"
+            width="20px"
+            fill="#6a7282"
+          >
+            <path
+              d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+            />
+          </svg>
+        </button>
+      </div>
 
       <div
         id="qr-box"
-        style="
-          box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-            rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-        "
-        class="bg-gray-50 mt-2 w-[300px] h-[300px] rounded-lg overflow-hidden hover:bg-gray-100 cursor-pointer active:bg-gray-100 sm:active:bg-gray-200 flex justify-center items-center select-none"
+        class="bg-gray-50 mt-2 w-[300px] h-[300px] rounded-lg overflow-hidden flex justify-center items-center"
       >
         <div id="qr-label">
-          <div class="font-bold text-gray-600 text-xl text-center">
-            <span>Paste from clipboard</span>
-          </div>
-          <div class="text-gray-500 text-center hidden sm:block">
-            <kbd>(CTRL + V)</kbd>
+          <div class="text-gray-400 text-center text-sm">
+            <span>QR code will appear here</span>
           </div>
         </div>
       </div>
-
-      <button
-        id="clear-btn"
-        class="hidden text-center absolute -bottom-14 left-1/2 -translate-x-1/2 uppercase p-2 text-gray-600 font-medium underline underline-offset-2 cursor-pointer active:text-gray-700"
-      >
-        clear
-      </button>
     </div>
 
     <script>
       document.addEventListener("touchstart", () => {}, true); // iOS fix
 
-      const box = document.getElementById("qr-box");
-      const label = document.getElementById("qr-label");
-      const clearBtn = document.getElementById("clear-btn");
-      const hint = document.getElementById("text-hint");
+      const input = document.querySelector("input");
+      const closeBtn = document.querySelector("button");
+      const qrBox = document.getElementById("qr-box");
+      const qrLabel = document.getElementById("qr-label");
 
       let qr;
 
-      function formatHintText(text) {
-        if (text.length <= 30) return text;
-        return text.slice(0, 15) + "[...]" + text.slice(-15);
-      }
+      input.addEventListener("input", () => {
+        const value = input.value.trim();
 
-      async function handlePaste() {
-        try {
-          const text = await navigator.clipboard.readText();
-          if (!text.trim()) return;
+        // Clear existing QR code
+        qrLabel.innerHTML = "";
 
-          box.innerHTML = "";
-          qr = new QRCode(box, {
-            text,
+        if (value) {
+          closeBtn.classList.remove("hidden");
+
+          qr = new QRCode(qrLabel, {
+            text: value,
             width: 300,
             height: 300,
-            colorDark: "#262626",
-            colorLight: "#f3f4f6",
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H,
           });
-
-          hint.textContent = formatHintText(text);
-          hint.title = text;
-          hint.classList.remove("hidden");
-
-          clearBtn.classList.remove("hidden");
-        } catch (err) {
-          alert("Paste from clipboard failed. Check permissions and retry.");
-          box.innerHTML = "";
-          box.appendChild(label);
-          clearBtn.classList.add("hidden");
-          hint.classList.add("hidden");
-        }
-      }
-
-      box.addEventListener("click", handlePaste);
-
-      document.addEventListener("keydown", (e) => {
-        if (e.ctrlKey && e.key === "v") {
-          e.preventDefault();
-          handlePaste();
+        } else {
+          closeBtn.classList.add("hidden");
+          qrLabel.innerHTML = `<div class="text-gray-400 text-center text-sm"><span>QR code will appear here</span></div>`;
         }
       });
 
-      clearBtn.addEventListener("click", () => {
-        box.innerHTML = "";
-        box.appendChild(label);
-        clearBtn.classList.add("hidden");
-        hint.classList.add("hidden");
+      closeBtn.addEventListener("click", () => {
+        input.value = "";
+        closeBtn.classList.add("hidden");
+        qrLabel.innerHTML = `<div class="text-gray-400 text-center text-sm"><span>QR code will appear here</span></div>`;
       });
     </script>
   </body>
