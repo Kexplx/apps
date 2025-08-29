@@ -1,102 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" class="h-full">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="shortcut icon" href="favicon.png" type="image/png" />
-    <title>QR Code Generator</title>
-  </head>
-  <body
-    class="fixed inset-0 flex justify-center items-center overflow-hidden text-gray-800"
-  >
-    <div
-      class="text-center absolute top-10 left-1/2 -translate-x-1/2 w-96 text-gray-400 text-sm uppercase"
-    >
-      <div>QR Code Generator</div>
-    </div>
-
-    <div class="relative">
-      <div
-        class="text-center absolute -bottom-14 -translate-x-1/2 left-1/2 text-sm text-gray-800"
-      >
-        <input
-          type="text"
-          placeholder="Enter URL"
-          spellcheck="false"
-          autocomplete="off"
-          style="font-size: 16px"
-          class="bg-gray-50 rounded-lg px-4 py-2 pr-9 shadow-inner w-[300px] focus:outline-none focus:ring-1 focus:ring-blue-400 border border-gray-300"
-        />
-
-        <button
-          class="absolute right-2 top-1/2 -translate-y-1/2 hidden cursor-pointer active:bg-gray-100 rounded p-1"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="20px"
-            viewBox="0 -960 960 960"
-            width="20px"
-            fill="#6a7282"
-          >
-            <path
-              d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-            />
-          </svg>
-        </button>
-      </div>
-
-      <div
-        id="qr-box"
-        class="bg-gray-50 mt-2 w-[300px] h-[300px] rounded-lg overflow-hidden flex justify-center items-center"
-      >
-        <div id="qr-label">
-          <div class="text-gray-400 text-center text-sm">
-            <span>QR code will appear here</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script>
-      document.addEventListener("touchstart", () => {}, true); // iOS fix
-
-      const input = document.querySelector("input");
-      const closeBtn = document.querySelector("button");
-      const qrBox = document.getElementById("qr-box");
-      const qrLabel = document.getElementById("qr-label");
-
-      let qr;
-
-      input.addEventListener("input", () => {
-        const value = input.value.trim();
-
-        // Clear existing QR code
-        qrLabel.innerHTML = "";
-
-        if (value) {
-          closeBtn.classList.remove("hidden");
-
-          qr = new QRCode(qrLabel, {
-            text: value,
-            width: 300,
-            height: 300,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H,
-          });
-        } else {
-          closeBtn.classList.add("hidden");
-          qrLabel.innerHTML = `<div class="text-gray-400 text-center text-sm"><span>QR code will appear here</span></div>`;
-        }
-      });
-
-      closeBtn.addEventListener("click", () => {
-        input.value = "";
-        closeBtn.classList.add("hidden");
-        qrLabel.innerHTML = `<div class="text-gray-400 text-center text-sm"><span>QR code will appear here</span></div>`;
-      });
-    </script>
-  </body>
+    <meta charset="utf-8"/>
+    <title>Angular Template</title>
+    <base href="https://kexplx.github.io/apps/dck-qr-code-generator/"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="stylesheet" href="styles.css"></head>
+  <body class="h-full overflow-hidden text-gray-800">
+    <app-root></app-root>
+  <script src="main.js" type="module"></script></body>
 </html>
