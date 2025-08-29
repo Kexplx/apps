@@ -1,1 +1,1 @@
-[https://kexplx.github.io/apps](https://kexplx.github.io/apps)
+- [DCK QR Code Generator](https://kexplx.github.io/apps/dck-qr-code-generator)
