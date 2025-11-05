@@ -61,10 +61,13 @@ const stationsByUser = {
 };
 
 const stationTemplate = (s) => `
-    <div class="px-4 text-right">
+    <div class="px-4 pl-2 text-right">
         <p class="text-6xl tracking-tight font-medium" style="color:${s.color}">
             <a target="_blank" href="${s.locationUrl}">${s.name}</a>
         </p>
+                    <div class="text-xl -mt-2"  style="color:${s.color}">
+                ${s.city}
+            </div>
         <div class="inline-block text-right">
             <p class="text-7xl tracking-tighter font-bold leading-none">
                 ${s.prices[s.priceToShow]
@@ -79,12 +82,10 @@ const stationTemplate = (s) => `
             <div class="text-neutral-400 text-xl">
                 1L ${toTitleCase(s.priceToShow)}
             </div>
-            <div class="text-neutral-400 text-xl">
+            <div class="text-neutral-400 text-xl -mt-1">
                 ${s.pricesUpdatedTime}
             </div>
-            <div class="text-neutral-400 text-xl italic">
-                ${s.city}
-            </div>
+
         </div>
     </div>
 `;
