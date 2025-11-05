@@ -9,7 +9,7 @@ const stationsByUser = {
       color: "#e7000b",
       priceToShow: "e10",
       prices: { diesel: 0, e10: 9.999, e5: 0 },
-      pricesUpdatedTime: "",
+      pricesUpdatedTime: "heute, 12:15 Uhr",
     },
     {
       id: "750e8832869ee147412cd7bb275ed869",
@@ -20,7 +20,7 @@ const stationsByUser = {
       color: "#00a63e",
       priceToShow: "e10",
       prices: { diesel: 0, e10: 9.999, e5: 0 },
-      pricesUpdatedTime: "",
+      pricesUpdatedTime: "heute, 12:15 Uhr",
     },
   ],
   juergen: [
@@ -33,7 +33,7 @@ const stationsByUser = {
       color: "#155dfc",
       priceToShow: "diesel",
       prices: { diesel: 0, e10: 0, e5: 0 },
-      pricesUpdatedTime: "",
+      pricesUpdatedTime: "heute, 12:15 Uhr",
     },
     {
       id: "b30d446620e320068a14010b14833e5d",
@@ -61,33 +61,39 @@ const stationsByUser = {
 };
 
 const stationTemplate = (s) => `
-    <div class="px-4 pl-2 text-right">
+  <div class="w-full px-10">
+    <div class="flex justify-start">
+      <div class="text-left">
         <p class="text-6xl tracking-tight font-medium" style="color:${s.color}">
-            <a target="_blank" href="${s.locationUrl}">${s.name}</a>
+          <a target="_blank" href="${s.locationUrl}">${s.name}</a>
         </p>
-                    <div class="text-xl -mt-2"  style="color:${s.color}">
-                ${s.city}
-            </div>
-        <div class="inline-block text-right">
-            <p class="text-7xl tracking-tighter font-bold leading-none">
-                ${s.prices[s.priceToShow]
-                  .toFixed(3)
-                  .replace(".", ",")
-                  .slice(0, -1)}<span class="text-4xl align-top">${s.prices[
+        <div class="text-xl -mt-2 text-start" style="color:${s.color}">
+          ${s.city}
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-between items-start">
+      <div class="text-right">
+        <p class="text-7xl tracking-tighter font-bold leading-none">
+          ${s.prices[s.priceToShow]
+            .toFixed(3)
+            .replace(".", ",")
+            .slice(0, -1)}<span class="text-4xl align-top">${s.prices[
   s.priceToShow
 ]
   .toFixed(3)
   .slice(-1)}</span> €
-            </p>
-            <div class="text-neutral-400 text-xl">
-                1L ${toTitleCase(s.priceToShow)}
-            </div>
-            <div class="text-neutral-400 text-xl -mt-1">
-                ${s.pricesUpdatedTime}
-            </div>
-
+        </p>
+        <div class="text-neutral-400 text-xl">
+          1L ${toTitleCase(s.priceToShow)}
         </div>
+        <div class="text-neutral-400 text-xl -mt-1">
+          ${s.pricesUpdatedTime}
+        </div>
+      </div>
     </div>
+  </div>
 `;
 
 (async () => {
@@ -132,7 +138,6 @@ const stationTemplate = (s) => `
       return m ? m[1].trim() : null;
     };
     const timeText = getTimeText(html);
-    console.log("timeText", timeText);
 
     return {
       lastUpdated: timeText,
