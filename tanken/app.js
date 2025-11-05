@@ -84,8 +84,19 @@ const stationsByUser = {
   ],
 };
 
-const stationTemplate = (s) => `
-  <div class="w-full px-10">
+const stationTemplate = (s) => {
+  const price = s.prices[s.priceToShow];
+  const formatted =
+    price == null
+      ? "x,xx<span class='text-4xl align-top'>x</span> €"
+      : `${price
+          .toFixed(3)
+          .replace(".", ",")
+          .slice(0, -1)}<span class="text-4xl align-top">${price
+          .toFixed(3)
+          .slice(-1)}</span> €`;
+
+  return `<div class="w-full px-10">
     <div class="flex justify-start">
       <div class="text-left">
         <p class="text-6xl tracking-tight font-medium" style="color:${s.color}">
@@ -97,28 +108,22 @@ const stationTemplate = (s) => `
       </div>
     </div>
 
-    <div class="flex justify-between items-start">
+    <div class="flex -mt-1 justify-between items-start">
       <div class="text-right">
         <p class="text-7xl tracking-tighter font-bold leading-none">
-          ${s.prices[s.priceToShow]
-            .toFixed(3)
-            .replace(".", ",")
-            .slice(0, -1)}<span class="text-4xl align-top">${s.prices[
-  s.priceToShow
-]
-  .toFixed(3)
-  .slice(-1)}</span> €
+          ${formatted}
         </p>
         <div class="text-neutral-400 text-xl">
-          1L ${toTitleCase(s.priceToShow)}
+         pro Liter ${toTitleCase(s.priceToShow)}
         </div>
         <div class="text-neutral-400 text-xl -mt-1">
-          ${s.pricesUpdatedTime}
+          ${s.pricesUpdatedTime ?? "n/a"} 
         </div>
       </div>
     </div>
   </div>
 `;
+};
 
 (async () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -163,7 +168,7 @@ const stationTemplate = (s) => `
     };
     const timeText = getTimeText(html);
 
-    return {
+    const r = {
       lastUpdated: timeText,
       prices: {
         e5: byLabel(/<strong>\s*Super\s+Benzin\s*<\/strong>/),
@@ -171,10 +176,20 @@ const stationTemplate = (s) => `
         diesel: byLabel(/<strong>\s*Diesel\s*<\/strong>/),
       },
     };
+
+    return r;
   }
 
   // sort stations by price to show
-  stations.sort((a, b) => a.prices[a.priceToShow] - b.prices[b.priceToShow]);
+  stations.sort((a, b) => {
+    const pa = a.prices[a.priceToShow];
+    const pb = b.prices[b.priceToShow];
+
+    if (pa == null && pb == null) return 0;
+    if (pa == null) return 1;
+    if (pb == null) return -1;
+    return pa - pb;
+  });
 
   // render stations into html container
   const container = document.getElementById("stationContainer");
