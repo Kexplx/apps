@@ -58,6 +58,30 @@ const stationsByUser = {
       pricesUpdatedTime: "",
     },
   ],
+  firat: [
+    {
+      id: "04696bc174c2b52c98f680b44b9a871a",
+      name: "Aral",
+      city: "Schwaig",
+      locationUrl:
+        "https://ich-tanke.de/tankstelle/04696bc174c2b52c98f680b44b9a871a/",
+      color: "#155dfc",
+      priceToShow: "e10",
+      prices: { diesel: 0, e10: 0, e5: 0 },
+      pricesUpdatedTime: "",
+    },
+    {
+      id: "233a4b8bb1b908f34aae52770aa56da8",
+      name: "Aral",
+      city: "Erlangen (Büchenbach)",
+      locationUrl:
+        "https://ich-tanke.de/tankstelle/233a4b8bb1b908f34aae52770aa56da8/",
+      color: "#0084d1",
+      priceToShow: "e10",
+      prices: { diesel: 0, e10: 0, e5: 0 },
+      pricesUpdatedTime: "",
+    },
+  ],
 };
 
 const stationTemplate = (s) => `
@@ -67,7 +91,7 @@ const stationTemplate = (s) => `
         <p class="text-6xl tracking-tight font-medium" style="color:${s.color}">
           <a target="_blank" href="${s.locationUrl}">${s.name}</a>
         </p>
-        <div class="text-xl -mt-2 text-start" style="color:${s.color}">
+        <div class="text-xl -mt-1 text-start" style="color:${s.color}">
           ${s.city}
         </div>
       </div>
