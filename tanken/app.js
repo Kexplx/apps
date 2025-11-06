@@ -4,7 +4,6 @@ const stationsByUser = {
       id: "152131",
       name: "AVIA",
       city: "Regensburg",
-      locationUrl: "https://www.clever-tanken.de/tankstelle_details/152131",
       color: "#e7000b",
       priceToShow: "e10",
       prices: { diesel: 0, e10: 9.999, e5: 0 },
@@ -14,7 +13,6 @@ const stationsByUser = {
       id: "42298",
       name: "HEM",
       city: "Regensburg",
-      locationUrl: "https://www.clever-tanken.de/tankstelle_details/42298",
       color: "#00a63e",
       priceToShow: "e10",
       prices: { diesel: 0, e10: 9.999, e5: 0 },
@@ -58,6 +56,44 @@ const stationsByUser = {
       priceToShow: "diesel",
       prices: { diesel: 0, e10: 0, e5: 0 },
       pricesUpdatedTime: "",
+    },
+  ],
+  magnus: [
+    {
+      id: "152131",
+      name: "AVIA",
+      city: "Regensburg, Landshuterstr.",
+      color: "#e7000b",
+      priceToShow: "e10",
+      prices: { diesel: 0, e10: 9.999, e5: 0 },
+      pricesUpdatedTime: "heute, 12:15 Uhr",
+    },
+    {
+      id: "26773",
+      name: "JET",
+      city: "Regensburg, Bajuwarenstr.",
+      color: "#d08700",
+      priceToShow: "e10",
+      prices: { diesel: 0, e10: 9.999, e5: 0 },
+      pricesUpdatedTime: "heute, 12:15 Uhr",
+    },
+    {
+      id: "26777",
+      name: "HEM",
+      city: "Regensburg, Friedenstr.",
+      color: "#00a63e",
+      priceToShow: "e10",
+      prices: { diesel: 0, e10: 9.999, e5: 0 },
+      pricesUpdatedTime: "heute, 12:15 Uhr",
+    },
+    {
+      id: "13222",
+      name: "Aral",
+      city: "Regensburg, Kirchmeierstr.",
+      color: "#155dfc",
+      priceToShow: "e10",
+      prices: { diesel: 0, e10: 9.999, e5: 0 },
+      pricesUpdatedTime: "heute, 12:15 Uhr",
     },
   ],
   firat: [
@@ -127,7 +163,7 @@ const stationTemplate = (s) => {
 
 (async () => {
   const urlParams = new URLSearchParams(window.location.search);
-  const user = urlParams.get("u") || "firat";
+  const user = urlParams.get("u") || "magnus";
 
   stations = stationsByUser[user];
 
