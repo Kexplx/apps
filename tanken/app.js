@@ -1,22 +1,20 @@
 const stationsByUser = {
   oscar: [
     {
-      id: "f4a1abbdf69eaa207904e85eaac63d11",
+      id: "152131",
       name: "AVIA",
       city: "Regensburg",
-      locationUrl:
-        "https://ich-tanke.de/tankstelle/f4a1abbdf69eaa207904e85eaac63d11/",
+      locationUrl: "https://www.clever-tanken.de/tankstelle_details/152131",
       color: "#e7000b",
       priceToShow: "e10",
       prices: { diesel: 0, e10: 9.999, e5: 0 },
       pricesUpdatedTime: "heute, 12:15 Uhr",
     },
     {
-      id: "750e8832869ee147412cd7bb275ed869",
+      id: "42298",
       name: "HEM",
       city: "Regensburg",
-      locationUrl:
-        "https://ich-tanke.de/tankstelle/750e8832869ee147412cd7bb275ed869/",
+      locationUrl: "https://www.clever-tanken.de/tankstelle_details/42298",
       color: "#00a63e",
       priceToShow: "e10",
       prices: { diesel: 0, e10: 9.999, e5: 0 },
@@ -25,33 +23,37 @@ const stationsByUser = {
   ],
   juergen: [
     {
-      id: "8a2221b0afa9576f7639724e33add16d",
+      id: "16209",
       name: "Aral",
       city: "Bad Kötzting",
-      locationUrl:
-        "https://ich-tanke.de/tankstelle/8a2221b0afa9576f7639724e33add16d/",
       color: "#155dfc",
       priceToShow: "diesel",
       prices: { diesel: 0, e10: 0, e5: 0 },
       pricesUpdatedTime: "heute, 12:15 Uhr",
     },
     {
-      id: "b30d446620e320068a14010b14833e5d",
+      id: "13347",
+      name: "Brey",
+      city: "Chamerau",
+      locationUrl: "https://www.clever-tanken.de/tankstelle_details/13347",
+      color: "#f54900",
+      priceToShow: "diesel",
+      prices: { diesel: 0, e10: 0, e5: 0 },
+      pricesUpdatedTime: "heute, 12:15 Uhr",
+    },
+    {
+      id: "54427",
       name: "Greil",
       city: "Bad Kötzting",
-      locationUrl:
-        "https://ich-tanke.de/tankstelle/b30d446620e320068a14010b14833e5d/",
       color: "#00a63e",
       priceToShow: "diesel",
       prices: { diesel: 0, e10: 0, e5: 0 },
       pricesUpdatedTime: "",
     },
     {
-      id: "f0f4fcbf00b1a4cc9011037581e6a292",
+      id: "185645",
       name: "AGIP ENI",
       city: "Regensburg",
-      locationUrl:
-        "https://ich-tanke.de/tankstelle/f0f4fcbf00b1a4cc9011037581e6a292/",
       color: "#d08700",
       priceToShow: "diesel",
       prices: { diesel: 0, e10: 0, e5: 0 },
@@ -60,22 +62,18 @@ const stationsByUser = {
   ],
   firat: [
     {
-      id: "04696bc174c2b52c98f680b44b9a871a",
+      id: "1859",
       name: "Aral",
       city: "Schwaig",
-      locationUrl:
-        "https://ich-tanke.de/tankstelle/04696bc174c2b52c98f680b44b9a871a/",
       color: "#155dfc",
       priceToShow: "e10",
       prices: { diesel: 0, e10: 0, e5: 0 },
       pricesUpdatedTime: "",
     },
     {
-      id: "233a4b8bb1b908f34aae52770aa56da8",
+      id: "2097",
       name: "Aral",
       city: "Erlangen (Büchenbach)",
-      locationUrl:
-        "https://ich-tanke.de/tankstelle/233a4b8bb1b908f34aae52770aa56da8/",
       color: "#0084d1",
       priceToShow: "e10",
       prices: { diesel: 0, e10: 0, e5: 0 },
@@ -100,7 +98,9 @@ const stationTemplate = (s) => {
     <div class="flex justify-start">
       <div class="text-left">
         <p class="text-6xl tracking-tight font-medium" style="color:${s.color}">
-          <a target="_blank" href="${s.locationUrl}">${s.name}</a>
+          <a target="_blank" href="${
+            "https://www.clever-tanken.de/tankstelle_details/" + s.id
+          }">${s.name}</a>
         </p>
         <div class="text-xl -mt-1 text-start" style="color:${s.color}">
           ${s.city}
@@ -127,7 +127,7 @@ const stationTemplate = (s) => {
 
 (async () => {
   const urlParams = new URLSearchParams(window.location.search);
-  const user = urlParams.get("u") || "oscar";
+  const user = urlParams.get("u") || "firat";
 
   stations = stationsByUser[user];
 
@@ -141,43 +141,44 @@ const stationTemplate = (s) => {
   );
 
   async function fetchPrices(stationId) {
-    const url = `https://europe-west3-crimeview.cloudfunctions.net/handleGet?url=https://ich-tanke.de/tankstelle/${stationId}/`;
+    const url = `https://europe-west3-crimeview.cloudfunctions.net/handleGet?url=https://clever-tanken.de/tankstelle_details/${stationId}`;
     const response = await fetch(url);
     const html = await response.text();
 
-    const blocks = [
-      ...html.matchAll(/<div class="preis">([\s\S]*?)<\/div>/g),
-    ].map((m) => m[1]);
-
-    const priceInBlock = (block) => {
-      const m = block.match(
-        /<span class="zahl">\s*([0-9],[0-9]{2})<sup>([0-9])<\/sup>/
-      );
-      return m ? toNum(m[1] + m[2]) : null; // "1,66" + "9" -> toNum("1,669")
-    };
-
-    const byLabel = (re) => {
-      const b = blocks.find((bl) => re.test(bl));
-      return b ? priceInBlock(b) : null;
-    };
-
-    // Extracts the visible timestamp text like: "heute, 11:41 Uhr"
-    const getTimeText = (block) => {
-      const m = block.match(/<\/span>\s*([^<]+)\s*<div class="clear">/);
-      return m ? m[1].trim() : null;
-    };
-    const timeText = getTimeText(html);
-
     const r = {
-      lastUpdated: timeText,
-      prices: {
-        e5: byLabel(/<strong>\s*Super\s+Benzin\s*<\/strong>/),
-        e10: byLabel(/<strong>\s*Super\s*\(E10\)\s*Benzin\s*<\/strong>/),
-        diesel: byLabel(/<strong>\s*Diesel\s*<\/strong>/),
-      },
+      lastUpdated: extractLastUpdated(html),
+      prices: extractPrices(html),
     };
 
     return r;
+  }
+
+  function extractPrices(rawHtml) {
+    const doc = new DOMParser().parseFromString(rawHtml, "text/html");
+
+    const read = (id) => {
+      const main = doc
+        .querySelector(`#current-price-${id}`)
+        ?.textContent.trim();
+      const sup = doc.querySelector(`#suffix-price-${id}`)?.textContent.trim();
+      if (!main || !sup) return null;
+      return parseFloat(main + sup);
+    };
+
+    return {
+      diesel: read(1),
+      e10: read(2),
+      e5: read(3),
+    };
+  }
+
+  function extractLastUpdated(rawHtml) {
+    const match = rawHtml.match(
+      /Letzte Aktualisierung:\s*([0-9]{2}\.[0-9]{2}\.[0-9]{4}\s+[0-9]{2}:[0-9]{2})/
+    );
+
+    const result = match ? match[1] : null;
+    return result;
   }
 
   // sort stations by price to show
