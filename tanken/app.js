@@ -130,44 +130,51 @@ const stationTemplate = (s, czechPrice) => {
           .toFixed(3)
           .slice(-1)}</span> €`;
 
-  return `<div class="w-full px-10">
-    <div class="flex justify-start">
-      <div class="text-left">
-        <p class="text-6xl tracking-tight font-medium" style="color:${s.color}">
-          <a target="_blank" href="${
-            "https://www.clever-tanken.de/tankstelle_details/" + s.id
-          }">${s.name}</a>
-        </p>
-        <div class="text-xl -mt-1 text-start" style="color:${s.color}">
-          ${s.city}
+  return `
+    <div class="w-full px-10">
+      <div class="flex justify-start">
+        <div class="text-left">
+          <p class="text-6xl tracking-tight font-medium" style="color:${
+            s.color
+          }">
+            <a target="_blank" href="https://www.clever-tanken.de/tankstelle_details/${
+              s.id
+            }">
+              ${s.name}
+            </a>
+          </p>
+          <div class="text-xl -mt-1 text-start" style="color:${s.color}">
+            ${s.city}
+          </div>
+        </div>
+      </div>
+      <div class="flex -mt-1 justify-between items-start">
+        <div class="text-right">
+          <p class="text-7xl tracking-tighter font-bold leading-none">
+            ${formatted}
+          </p>
+          <div class="text-neutral-400 text-xl">
+            pro Liter ${toTitleCase(s.priceToShow)}
+          </div>
+          <div class="text-neutral-400 text-xl -mt-1">
+            ${s.pricesUpdatedTime ?? "n/a"}
+          </div>
+          ${
+            czechPrice
+              ? `
+                <div class="text-neutral-400 text-xl -mt-1">
+                  Tschechienpreis: 
+                  <a target="_blank" class="underline" href="https://www.tank-ono.cz/de/index.php?page=cenik">
+                    ${czechPrice.toFixed(3).replace(".", ",")} €
+                  </a>
+                </div>
+              `
+              : ""
+          }
         </div>
       </div>
     </div>
-
-    <div class="flex -mt-1 justify-between items-start">
-      <div class="text-right">
-        <p class="text-7xl tracking-tighter font-bold leading-none">
-          ${formatted}
-        </p>
-        <div class="text-neutral-400 text-xl">
-         pro Liter ${toTitleCase(s.priceToShow)}
-        </div>
-        ${
-          czechPrice
-            ? `<div class="text-neutral-400 text-xl -mt-1">
-         Tschechienpreis: <a target="_blank" class="underline" href="https://www.tank-ono.cz/de/index.php?page=cenik">${czechPrice
-           .toFixed(3)
-           .replace(".", ",")} €</a>
-        </div>`
-            : ""
-        }
-        <div class="text-neutral-400 text-xl -mt-1">
-          ${s.pricesUpdatedTime ?? "n/a"} 
-        </div>
-      </div>
-    </div>
-  </div>
-`;
+  `;
 };
 
 (async () => {
