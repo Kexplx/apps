@@ -118,7 +118,7 @@ const stationsByUser = {
   ],
 };
 
-const stationTemplate = (s) => {
+const stationTemplate = (s, czechPrice) => {
   const price = s.prices[s.priceToShow];
   const formatted =
     price == null
@@ -152,6 +152,15 @@ const stationTemplate = (s) => {
         <div class="text-neutral-400 text-xl">
          pro Liter ${toTitleCase(s.priceToShow)}
         </div>
+        ${
+          czechPrice
+            ? `<div class="text-neutral-400 text-xl -mt-1">
+         Tschechienpreis: <a target="_blank" class="underline" href="https://www.tank-ono.cz/de/index.php?page=cenik">${czechPrice
+           .toFixed(3)
+           .replace(".", ",")} €</a>
+        </div>`
+            : ""
+        }
         <div class="text-neutral-400 text-xl -mt-1">
           ${s.pricesUpdatedTime ?? "n/a"} 
         </div>
@@ -163,7 +172,7 @@ const stationTemplate = (s) => {
 
 (async () => {
   const urlParams = new URLSearchParams(window.location.search);
-  const user = urlParams.get("u") || "magnus";
+  const user = urlParams.get("u") || "juergen";
 
   stations = stationsByUser[user];
 
@@ -175,6 +184,8 @@ const stationTemplate = (s) => {
       station.pricesUpdatedTime = lastUpdated;
     })
   );
+
+  const czechPrices = await fetchCzechPrices();
 
   async function fetchPrices(stationId) {
     const url = `https://europe-west3-crimeview.cloudfunctions.net/handleGet?url=https://clever-tanken.de/tankstelle_details/${stationId}`;
@@ -217,6 +228,35 @@ const stationTemplate = (s) => {
     return result;
   }
 
+  async function fetchCzechPrices() {
+    const url = `https://europe-west3-crimeview.cloudfunctions.net/handleGet?url=https://www.tank-ono.cz/de/index.php?page=cenik`;
+    const response = await fetch(url);
+    const html = await response.text();
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    const euroTables = doc.querySelectorAll("table.cenik");
+    if (euroTables.length < 2) return null;
+    const firstStationRow = euroTables[1].querySelectorAll("tr")[1];
+    if (!firstStationRow) return null;
+
+    const dieselCell = firstStationRow.querySelectorAll("td")[4];
+    if (!dieselCell) return null;
+    const textDiesel = dieselCell.textContent.trim().replace(",", ".");
+    const valueDiesel = parseFloat(textDiesel);
+
+    const gasolineCell = firstStationRow.querySelectorAll("td")[1];
+    if (!gasolineCell) return null;
+    const textGasoline = gasolineCell.textContent.trim().replace(",", ".");
+    const valueGasoline = parseFloat(textGasoline);
+
+    return {
+      diesel: isNaN(valueDiesel) ? null : valueDiesel,
+      e5: isNaN(valueGasoline) ? null : valueGasoline, // czech doesnt have e5 or e10
+      e10: isNaN(valueGasoline) ? null : valueGasoline, // czech doesnt have e5 or e10
+    };
+  }
+
   // sort stations by price to show
   stations.sort((a, b) => {
     const pa = a.prices[a.priceToShow];
@@ -230,5 +270,14 @@ const stationTemplate = (s) => {
 
   // render stations into html container
   const container = document.getElementById("stationContainer");
-  container.innerHTML = stations.map(stationTemplate).join("");
+  container.innerHTML = stations
+    .map((v, i) => {
+      if (i === 0) {
+        // first station with lowest price, show czech price comparison
+        return stationTemplate(v, czechPrices?.[v.priceToShow]);
+      } else {
+        return stationTemplate(v);
+      }
+    })
+    .join("");
 })();

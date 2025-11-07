@@ -178,9 +178,6 @@
   }
 }
 @layer utilities {
-  .visible {
-    visibility: visible;
-  }
   .container {
     width: 100%;
     @media (width >= 40rem) {
@@ -299,6 +296,9 @@
   }
   .text-neutral-400 {
     color: var(--color-neutral-400);
+  }
+  .underline {
+    text-decoration-line: underline;
   }
 }
 @property --tw-space-y-reverse {
