@@ -25,24 +25,42 @@
       style="padding-top: 8rem"
     >
       <div class="w-full max-w-md px-10">
-        <h1 class="text-xl font-bold mb-4">DCK Wallpaper Generator</h1>
+        <img
+          src="AUMOVIO_Logo_web_orange_white_RGB.svg"
+          alt="DCK Logo"
+          class="w-32 mb-2"
+        />
+        <h1 class="text-xl font-bold mb-6">DCK Wallpaper Generator</h1>
 
-        <label for="friendlyName" class="mb-1 inline-block font-medium"
+        <label for="friendlyName" class="mb-1 inline-block"
           >Friendly Name:</label
         >
         <input
           type="text"
           id="friendlyName"
           spellcheck="false"
+          autocomplete="off"
           placeholder="Max Musters iPhone 11"
-          class="bg-neutral-800 rounded border w-full border-neutral-600 text-[16px] px-3 py-2 focus:bg-transparent focus:border-blue-600 outline-0"
+          class="bg-neutral-800 rounded border transition w-full border-neutral-600 text-[16px] px-3 py-2 focus:bg-transparent focus:border-blue-600 outline-0"
         />
 
         <div class="mt-6">
           <button
             id="downloadBtn"
-            class="w-full rounded select-none bg-blue-800 border outline-0 border-blue-600 font-medium py-2 cursor-pointer hover:bg-blue-800/80 active:bg-blue-800/60"
+            class="w-full flex items-center justify-center rounded transition select-none bg-blue-700 outline-0 font-medium py-2 cursor-pointer hover:bg-blue-700/80 active:bg-blue-700/60"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 -960 960 960"
+              width="24px"
+              fill="#FFFFFF"
+              class="me-2"
+            >
+              <path
+                d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"
+              />
+            </svg>
             Download Wallpaper
           </button>
           <div
@@ -128,7 +146,10 @@
 
             canvas.toBlob((blob) => {
               const link = document.createElement("a");
-              link.download = "wallpaper.png";
+              link.download = `DCK_Wallpaper_${name.replaceAll(
+                /\s+/g,
+                "_"
+              )}.png`;
               link.href = URL.createObjectURL(blob);
               link.click();
 
