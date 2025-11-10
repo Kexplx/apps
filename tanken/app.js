@@ -157,7 +157,7 @@ const stationTemplate = (s, czechPrice) => {
             pro Liter ${toTitleCase(s.priceToShow)}
           </div>
           <div class="text-neutral-400 text-xl -mt-1">
-            ${s.pricesUpdatedTime ?? "n/a"}
+            ${formatRelativeDate(s.pricesUpdatedTime) ?? "n/a"}
           </div>
           ${
             czechPrice
@@ -165,7 +165,7 @@ const stationTemplate = (s, czechPrice) => {
                 <div class="text-neutral-400 text-xl -mt-1">
                   Tschechienpreis: 
                   <a target="_blank" class="underline" href="https://www.tank-ono.cz/de/index.php?page=cenik">
-                    ${czechPrice.toFixed(3).replace(".", ",")} €
+                    ${czechPrice.toFixed(2).replace(".", ",")} €
                   </a>
                 </div>
               `
