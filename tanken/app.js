@@ -115,6 +115,24 @@ const stationsByUser = {
       prices: { diesel: 0, e10: 0, e5: 0 },
       pricesUpdatedTime: "",
     },
+    {
+      id: "45669",
+      name: "Aral",
+      city: "Erlangen (Bruck)",
+      color: "#598fff",
+      priceToShow: "e10",
+      prices: { diesel: 0, e10: 0, e5: 0 },
+      pricesUpdatedTime: "",
+    },
+    {
+      id: "784",
+      name: "Aral",
+      city: "Fürth (Nordstadt)",
+      color: "#4682ff",
+      priceToShow: "e10",
+      prices: { diesel: 0, e10: 0, e5: 0 },
+      pricesUpdatedTime: "",
+    },
   ],
 };
 
@@ -189,7 +207,7 @@ const stationTemplate = (s, czechPrice) => {
       const { prices, lastUpdated } = await fetchPrices(station.id);
       station.prices = prices;
       station.pricesUpdatedTime = lastUpdated;
-    })
+    }),
   );
 
   const czechPrices = await fetchCzechPrices();
@@ -228,7 +246,7 @@ const stationTemplate = (s, czechPrice) => {
 
   function extractLastUpdated(rawHtml) {
     const match = rawHtml.match(
-      /Letzte Aktualisierung:\s*([0-9]{2}\.[0-9]{2}\.[0-9]{4}\s+[0-9]{2}:[0-9]{2})/
+      /Letzte Aktualisierung:\s*([0-9]{2}\.[0-9]{2}\.[0-9]{4}\s+[0-9]{2}:[0-9]{2})/,
     );
 
     const result = match ? match[1] : null;
