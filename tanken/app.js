@@ -1,3 +1,8 @@
+const encodedScrapeUrls_base64 = {
+  clvtnkn: "aHR0cHM6Ly93d3cuY2xldmVyLXRhbmtlbi5kZS90YW5rc3RlbGxlX2RldGFpbHMv",
+  czech: "aHR0cHM6Ly93d3cudGFuay1vbm8uY3ovZGUvaW5kZXgucGhwP3BhZ2U9Y2VuaWs=",
+};
+
 const stationsByUser = {
   oscar: [
     {
@@ -33,7 +38,7 @@ const stationsByUser = {
       id: "13347",
       name: "Brey",
       city: "Chamerau",
-      locationUrl: "https://www.clever-tanken.de/tankstelle_details/13347",
+      locationUrl: `${encodedScrapeUrls_base64.clvtnkn}13347`,
       color: "#f54900",
       priceToShow: "diesel",
       prices: { diesel: 0, e10: 0, e5: 0 },
@@ -134,6 +139,17 @@ const stationsByUser = {
       pricesUpdatedTime: "",
     },
   ],
+  martin: [
+    {
+      id: "3546",
+      name: "Aumer (Aral)",
+      city: "Kirchroth",
+      color: "#155dfc",
+      priceToShow: "diesel",
+      prices: { diesel: 0, e10: 0, e5: 0 },
+      pricesUpdatedTime: "",
+    },
+  ],
 };
 
 const stationTemplate = (s, czechPrice) => {
@@ -155,7 +171,7 @@ const stationTemplate = (s, czechPrice) => {
           <p class="text-6xl tracking-tight font-medium" style="color:${
             s.color
           }">
-            <a target="_blank" href="https://www.clever-tanken.de/tankstelle_details/${
+            <a target="_blank" href="${atob(encodedScrapeUrls_base64.clvtnkn)}${
               s.id
             }">
               ${s.name}
@@ -178,16 +194,28 @@ const stationTemplate = (s, czechPrice) => {
             ${formatRelativeDate(s.pricesUpdatedTime) ?? "n/a"}
           </div>
           ${
-            czechPrice
+            czechPrice && price != null
               ? `
                 <div class="text-neutral-400 text-xl -mt-1">
                   Tschechienpreis: 
-                  <a target="_blank" class="underline" href="https://www.tank-ono.cz/de/index.php?page=cenik">
+                  <a target="_blank"  href="${atob(encodedScrapeUrls_base64.czech)}">
+                    ${czechPrice.toFixed(2).replace(".", ",")} €
+                  </a>
+                </div>
+                <div class="text-green-500 font-medium text-lg -mt-1">
+                  Ersparnis 50L: ${((price - czechPrice) * 50).toFixed(2).replace(".", ",")} €
+                </div>
+              `
+              : czechPrice
+                ? `
+                <div class="text-neutral-400 text-xl -mt-1">
+                  Tschechienpreis: 
+                  <a target="_blank"  href="${atob(encodedScrapeUrls_base64.czech)}">
                     ${czechPrice.toFixed(2).replace(".", ",")} €
                   </a>
                 </div>
               `
-              : ""
+                : ""
           }
         </div>
       </div>
@@ -213,7 +241,7 @@ const stationTemplate = (s, czechPrice) => {
   const czechPrices = await fetchCzechPrices();
 
   async function fetchPrices(stationId) {
-    const url = `https://europe-west3-crimeview.cloudfunctions.net/handleGet?url=https://clever-tanken.de/tankstelle_details/${stationId}`;
+    const url = `https://europe-west3-crimeview.cloudfunctions.net/handleGet?url=${atob(encodedScrapeUrls_base64.clvtnkn)}${stationId}`;
     const response = await fetch(url);
     const html = await response.text();
 
@@ -254,7 +282,7 @@ const stationTemplate = (s, czechPrice) => {
   }
 
   async function fetchCzechPrices() {
-    const url = `https://europe-west3-crimeview.cloudfunctions.net/handleGet?url=https://www.tank-ono.cz/de/index.php?page=cenik`;
+    const url = `https://europe-west3-crimeview.cloudfunctions.net/handleGet?url=${atob(encodedScrapeUrls_base64.czech)}`;
     const response = await fetch(url);
     const html = await response.text();
 
