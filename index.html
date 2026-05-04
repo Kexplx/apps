@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tanken</title>
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="styles.min.css" />
+
+    <!-- Safari Header (even without webapp) -->
+    <meta name="theme-color" content="#0a0a0a" />
+    <link rel="manifest" href="manifest.webmanifest" />
+
+    <!-- iOS -->
+    <link rel="apple-touch-icon" href="touch-icon-180x180.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="green" />
+  </head>
+  <body
+    class="bg-neutral-950 text-neutral-200 py-5 flex flex-col items-center justify-center space-y-10"
+    style="touch-action: manipulation"
+  >
+    <div
+      id="fuelTypeSwitcher"
+      class="fixed top-7 right-4 z-50 flex flex-col items-center gap-2"
+    ></div>
+
+    <div
+      id="stationContainer"
+      class="w-full flex flex-col items-center justify-center space-y-10"
+    >
+      <div class="text-lg flex items-center animate-pulse">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="24px"
+          viewBox="0 -960 960 960"
+          width="24px"
+          fill="#e5e5e5"
+          class="me-2"
+        >
+          <path
+            d="M160-120v-640q0-33 23.5-56.5T240-840h240q33 0 56.5 23.5T560-760v280h40q33 0 56.5 23.5T680-400v180q0 17 11.5 28.5T720-180q17 0 28.5-11.5T760-220v-288q-9 5-19 6.5t-21 1.5q-42 0-71-29t-29-71q0-32 17.5-57.5T684-694l-84-84 42-42 148 144q15 15 22.5 35t7.5 41v380q0 42-29 71t-71 29q-42 0-71-29t-29-71v-200h-60v300H160Zm80-440h240v-200H240v200Zm480 0q17 0 28.5-11.5T760-600q0-17-11.5-28.5T720-640q-17 0-28.5 11.5T680-600q0 17 11.5 28.5T720-560ZM240-200h240v-280H240v280Zm240 0H240h240Z"
+          />
+        </svg>
+        Lade Tankstellen...
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        let lastTouchEnd = 0;
+
+        document.addEventListener(
+          "touchend",
+          (event) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+              event.preventDefault();
+            }
+            lastTouchEnd = now;
+          },
+          { passive: false },
+        );
+
+        document.addEventListener(
+          "dblclick",
+          (event) => {
+            event.preventDefault();
+          },
+          { passive: false },
+        );
+      })();
+    </script>
+
+    <script src="utils.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
