@@ -17,11 +17,12 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="green" />
   </head>
   <body
-    class="bg-neutral-950 text-neutral-200 py-10 flex flex-col items-center justify-center space-y-10"
+    class="bg-neutral-950 text-neutral-200 py-5 flex flex-col items-center justify-center space-y-10"
+    style="touch-action: manipulation"
   >
     <div
       id="fuelTypeSwitcher"
-      class="fixed top-4 right-4 z-50 flex flex-col items-center gap-2"
+      class="fixed top-7 right-4 z-50 flex flex-col items-center gap-2"
     ></div>
 
     <div
@@ -44,6 +45,32 @@
         Lade Tankstellen...
       </div>
     </div>
+
+    <script>
+      (() => {
+        let lastTouchEnd = 0;
+
+        document.addEventListener(
+          "touchend",
+          (event) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+              event.preventDefault();
+            }
+            lastTouchEnd = now;
+          },
+          { passive: false },
+        );
+
+        document.addEventListener(
+          "dblclick",
+          (event) => {
+            event.preventDefault();
+          },
+          { passive: false },
+        );
+      })();
+    </script>
 
     <script src="utils.js"></script>
     <script src="app.js"></script>
