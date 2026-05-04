@@ -10,7 +10,7 @@ const stationsByUser = {
       name: "AVIA",
       city: "Regensburg",
       color: "#e7000b",
-      priceToShow: "e10",
+      initialFuelType: "e10",
       prices: { diesel: 0, e10: 9.999, e5: 0 },
       pricesUpdatedTime: "heute, 12:15 Uhr",
     },
@@ -19,7 +19,7 @@ const stationsByUser = {
       name: "HEM",
       city: "Regensburg",
       color: "#00a63e",
-      priceToShow: "e10",
+      initialFuelType: "e10",
       prices: { diesel: 0, e10: 9.999, e5: 0 },
       pricesUpdatedTime: "heute, 12:15 Uhr",
     },
@@ -30,7 +30,7 @@ const stationsByUser = {
       name: "Aral",
       city: "Bad Kötzting",
       color: "#155dfc",
-      priceToShow: "diesel",
+      initialFuelType: "diesel",
       prices: { diesel: 0, e10: 0, e5: 0 },
       pricesUpdatedTime: "heute, 12:15 Uhr",
     },
@@ -40,7 +40,7 @@ const stationsByUser = {
       city: "Chamerau",
       locationUrl: `${encodedScrapeUrls_base64.clvtnkn}13347`,
       color: "#f54900",
-      priceToShow: "diesel",
+      initialFuelType: "diesel",
       prices: { diesel: 0, e10: 0, e5: 0 },
       pricesUpdatedTime: "heute, 12:15 Uhr",
     },
@@ -49,7 +49,7 @@ const stationsByUser = {
       name: "Greil",
       city: "Bad Kötzting",
       color: "#00a63e",
-      priceToShow: "diesel",
+      initialFuelType: "diesel",
       prices: { diesel: 0, e10: 0, e5: 0 },
       pricesUpdatedTime: "",
     },
@@ -58,7 +58,7 @@ const stationsByUser = {
       name: "AGIP ENI",
       city: "Regensburg",
       color: "#d08700",
-      priceToShow: "diesel",
+      initialFuelType: "diesel",
       prices: { diesel: 0, e10: 0, e5: 0 },
       pricesUpdatedTime: "",
     },
@@ -69,7 +69,7 @@ const stationsByUser = {
       name: "AVIA",
       city: "Regensburg, Landshuterstr.",
       color: "#e7000b",
-      priceToShow: "e10",
+      initialFuelType: "e10",
       prices: { diesel: 0, e10: 9.999, e5: 0 },
       pricesUpdatedTime: "heute, 12:15 Uhr",
     },
@@ -78,7 +78,7 @@ const stationsByUser = {
       name: "JET",
       city: "Regensburg, Bajuwarenstr.",
       color: "#d08700",
-      priceToShow: "e10",
+      initialFuelType: "e10",
       prices: { diesel: 0, e10: 9.999, e5: 0 },
       pricesUpdatedTime: "heute, 12:15 Uhr",
     },
@@ -87,7 +87,7 @@ const stationsByUser = {
       name: "HEM",
       city: "Regensburg, Friedenstr.",
       color: "#00a63e",
-      priceToShow: "e10",
+      initialFuelType: "e10",
       prices: { diesel: 0, e10: 9.999, e5: 0 },
       pricesUpdatedTime: "heute, 12:15 Uhr",
     },
@@ -96,7 +96,7 @@ const stationsByUser = {
       name: "Aral",
       city: "Regensburg, Kirchmeierstr.",
       color: "#155dfc",
-      priceToShow: "e10",
+      initialFuelType: "e10",
       prices: { diesel: 0, e10: 9.999, e5: 0 },
       pricesUpdatedTime: "heute, 12:15 Uhr",
     },
@@ -107,7 +107,7 @@ const stationsByUser = {
       name: "Aral",
       city: "Schwaig",
       color: "#155dfc",
-      priceToShow: "e10",
+      initialFuelType: "e10",
       prices: { diesel: 0, e10: 0, e5: 0 },
       pricesUpdatedTime: "",
     },
@@ -116,7 +116,7 @@ const stationsByUser = {
       name: "Aral",
       city: "Erlangen (Büchenbach)",
       color: "#0084d1",
-      priceToShow: "e10",
+      initialFuelType: "e10",
       prices: { diesel: 0, e10: 0, e5: 0 },
       pricesUpdatedTime: "",
     },
@@ -125,7 +125,7 @@ const stationsByUser = {
       name: "Aral",
       city: "Erlangen (Bruck)",
       color: "#598fff",
-      priceToShow: "e10",
+      initialFuelType: "e10",
       prices: { diesel: 0, e10: 0, e5: 0 },
       pricesUpdatedTime: "",
     },
@@ -134,7 +134,7 @@ const stationsByUser = {
       name: "Aral",
       city: "Fürth (Nordstadt)",
       color: "#4682ff",
-      priceToShow: "e10",
+      initialFuelType: "e10",
       prices: { diesel: 0, e10: 0, e5: 0 },
       pricesUpdatedTime: "",
     },
@@ -145,15 +145,15 @@ const stationsByUser = {
       name: "Aumer (Aral)",
       city: "Kirchroth",
       color: "#155dfc",
-      priceToShow: "diesel",
+      initialFuelType: "diesel",
       prices: { diesel: 0, e10: 0, e5: 0 },
       pricesUpdatedTime: "",
     },
   ],
 };
 
-const stationTemplate = (s, czechPrice) => {
-  const price = s.prices[s.priceToShow];
+const stationTemplate = (s, czechPrice, fuelType) => {
+  const price = s.prices[fuelType];
   const formatted =
     price == null
       ? "x,xx<span class='text-4xl align-top'>x</span> €"
@@ -165,7 +165,7 @@ const stationTemplate = (s, czechPrice) => {
           .slice(-1)}</span> €`;
 
   return `
-    <div class="w-full px-10">
+    <div class="w-full px-5">
       <div class="flex justify-start">
         <div class="text-left">
           <p class="text-6xl tracking-tight font-medium" style="color:${
@@ -188,7 +188,7 @@ const stationTemplate = (s, czechPrice) => {
             ${formatted}
           </p>
           <div class="text-neutral-400 text-xl">
-            pro Liter ${toTitleCase(s.priceToShow)}
+            pro Liter ${toTitleCase(fuelType)}
           </div>
           <div class="text-neutral-400 text-xl -mt-1">
             ${formatRelativeDate(s.pricesUpdatedTime) ?? "n/a"}
@@ -226,12 +226,21 @@ const stationTemplate = (s, czechPrice) => {
 (async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const user = urlParams.get("u") || "juergen";
+  const stations = stationsByUser[user] ?? stationsByUser.juergen;
+  const fuelTypes = ["diesel", "e5", "e10"];
+  const storageKey = `selectedFuelType:${user}`;
+  const storedFuelType = localStorage.getItem(storageKey);
+  let selectedFuelType = fuelTypes.includes(storedFuelType)
+    ? storedFuelType
+    : fuelTypes.includes(stations[0]?.initialFuelType)
+      ? stations[0].initialFuelType
+      : "diesel";
 
-  stations = stationsByUser[user];
+  localStorage.setItem(storageKey, selectedFuelType);
 
   // fetch prices
   await Promise.all(
-    stationsByUser[user].map(async (station) => {
+    stations.map(async (station) => {
       const { prices, lastUpdated } = await fetchPrices(station.id);
       station.prices = prices;
       station.pricesUpdatedTime = lastUpdated;
@@ -310,27 +319,60 @@ const stationTemplate = (s, czechPrice) => {
     };
   }
 
-  // sort stations by price to show
-  stations.sort((a, b) => {
-    const pa = a.prices[a.priceToShow];
-    const pb = b.prices[b.priceToShow];
-
-    if (pa == null && pb == null) return 0;
-    if (pa == null) return 1;
-    if (pb == null) return -1;
-    return pa - pb;
-  });
-
-  // render stations into html container
   const container = document.getElementById("stationContainer");
-  container.innerHTML = stations
-    .map((v, i) => {
-      if (i === 0) {
-        // first station with lowest price, show czech price comparison
-        return stationTemplate(v, czechPrices?.[v.priceToShow]);
-      } else {
-        return stationTemplate(v);
-      }
-    })
-    .join("");
+  const fuelTypeSwitcher = document.getElementById("fuelTypeSwitcher");
+
+  function renderStations(fuelType) {
+    const sortedStations = [...stations].sort((a, b) => {
+      const pa = a.prices[fuelType];
+      const pb = b.prices[fuelType];
+
+      if (pa == null && pb == null) return 0;
+      if (pa == null) return 1;
+      if (pb == null) return -1;
+      return pa - pb;
+    });
+
+    container.innerHTML = sortedStations
+      .map((v, i) => {
+        if (i === 0) {
+          // first station with lowest selected fuel price, show czech price comparison
+          return stationTemplate(v, czechPrices?.[fuelType], fuelType);
+        }
+
+        return stationTemplate(v, null, fuelType);
+      })
+      .join("");
+  }
+
+  function renderFuelTypeButtons(activeFuelType) {
+    fuelTypeSwitcher.innerHTML = fuelTypes
+      .map(
+        (fuelType) => `
+          <button
+            class="text-gray-500 w-16 py-1 border border-transparent text-lg ${fuelType === activeFuelType ? "bg-blue-950 border-blue-800! rounded text-white" : " "}"
+            data-fuel-type="${fuelType}"
+            type="button"
+          >
+            ${toTitleCase(fuelType)}
+          </button>
+        `,
+      )
+      .join("");
+
+    fuelTypeSwitcher.querySelectorAll("[data-fuel-type]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const nextFuelType = button.getAttribute("data-fuel-type");
+        if (!nextFuelType || nextFuelType === selectedFuelType) return;
+
+        selectedFuelType = nextFuelType;
+        localStorage.setItem(storageKey, selectedFuelType);
+        renderFuelTypeButtons(selectedFuelType);
+        renderStations(selectedFuelType);
+      });
+    });
+  }
+
+  renderFuelTypeButtons(selectedFuelType);
+  renderStations(selectedFuelType);
 })();
