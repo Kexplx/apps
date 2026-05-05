@@ -386,7 +386,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
       .map(
         (fuelType) => `
           <button
-            class="w-20 py-1.5 border rounded-full text-base transition-colors ${fuelType === activeFuelType ? "border-blue-800 border-2 bg-blue-950 text-white font-semibold" : "border-transparent text-neutral-300 hover:text-neutral-100 "}"
+            class="w-20 py-1.5 border rounded-full text-base transition-colors ${fuelType === activeFuelType ? "border-blue-700 border bg-blue-950 text-white font-semibold" : "border-transparent text-neutral-300 hover:text-neutral-100 "}"
             data-fuel-type="${fuelType}"
             type="button"
           >
@@ -395,6 +395,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
         `,
       )
       .join("");
+    fuelTypeSwitcher.style.display = "flex";
 
     fuelTypeSwitcher.querySelectorAll("[data-fuel-type]").forEach((button) => {
       button.addEventListener("click", () => {
