@@ -1,1 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="w-full pt-20 px-4">
+    <div class="max-w-2xl mx-auto">
+      <div class="gap-4 mb-8">
+        <div class="text-2xl font-bold mb-4">Paspique's Parse Checker</div>
+        <input
+          type="text"
+          id="rioUrl"
+          placeholder="https://raider.io/characters/eu/draenor/Kanha"
+          autofocus
+          class="w-full px-4 py-3 text-md border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
+      <div class="mt-6">
+        <ul id="characterList" class="list-none pl-0 text-lg space-y-1"></ul>
+      </div>
+    </div>
+
+    <script>
+      const input = document.getElementById("rioUrl");
+      const characterList = document.getElementById("characterList");
+
+      function redirectIfValid(value) {
+        const match = value
+          .trim()
+          .match(
+            /^https?:\/\/raider\.io\/characters\/([^/]+)\/([^/]+)\/([^/?#]+)$/i,
+          );
+
+        if (!match) return;
+
+        const [, region, realm, character] = match;
+
+        window.open(
+          `https://www.warcraftlogs.com/character/${region}/${realm}/${character.toLowerCase()}?zone=47`,
+          "_blank",
+        );
+
+        const li = document.createElement("li");
+        li.textContent = `${character} - ${realm.charAt(0).toUpperCase() + realm.slice(1)}`;
+        li.className =
+          "cursor-pointer py-1 px-2 rounded active:bg-gray-200 hover:bg-gray-100";
+        li.addEventListener("click", () => {
+          li.classList.toggle("bg-yellow-300");
+          li.classList.toggle("hover:bg-yellow-400");
+          li.classList.toggle("active:bg-yellow-500");
+        });
+        characterList.appendChild(li);
+
+        input.value = "";
+      }
+
+      input.addEventListener("paste", (e) => {
+        setTimeout(() => {
+          redirectIfValid(e.target.value);
+        }, 0);
+      });
+
+      input.addEventListener("input", (e) => {
+        redirectIfValid(e.target.value);
+      });
+    </script>
+  </body>
+</html>
