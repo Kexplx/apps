@@ -14,18 +14,39 @@
           id="rioUrl"
           placeholder="https://raider.io/characters/eu/draenor/Kanha"
           autofocus
-          class="w-full px-4 py-3 text-md border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          spellcheck="false"
+          autocomplete="off"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
-      <div class="mt-6">
-        <ul id="characterList" class="list-none pl-0 text-lg space-y-1"></ul>
+      <div class="mt-8">
+        <ul id="characterList" class="list-none pl-0 space-y-1"></ul>
       </div>
     </div>
 
     <script>
       const input = document.getElementById("rioUrl");
       const characterList = document.getElementById("characterList");
+      const selectionHeader = document.getElementById("selectionHeader");
+
+      function normalizeRealm(realm) {
+        return realm
+          .split("-")
+          .map(
+            (part) =>
+              part.charAt(0).toUpperCase() + part.slice(1).toLowerCase(),
+          )
+          .join("-");
+      }
+
+      function decodeSegment(value) {
+        try {
+          return decodeURIComponent(value);
+        } catch {
+          return value;
+        }
+      }
 
       function redirectIfValid(value) {
         const match = value
@@ -37,14 +58,18 @@
         if (!match) return;
 
         const [, region, realm, character] = match;
+        const decodedRealm = decodeSegment(realm);
+        const decodedCharacter = decodeSegment(character);
+        const normalizedRealm = normalizeRealm(decodedRealm);
 
         window.open(
-          `https://www.warcraftlogs.com/character/${region}/${realm}/${character.toLowerCase()}?zone=47`,
+          `https://www.warcraftlogs.com/character/${encodeURIComponent(region.toLowerCase())}/${encodeURIComponent(normalizedRealm)}/${encodeURIComponent(decodedCharacter.toLowerCase())}?zone=47`,
           "_blank",
         );
 
         const li = document.createElement("li");
-        li.textContent = `${character} - ${realm.charAt(0).toUpperCase() + realm.slice(1)}`;
+        li.textContent = `${decodedCharacter} - ${normalizedRealm}`;
+        li.title = "Click to highlight";
         li.className =
           "cursor-pointer py-1 px-2 rounded active:bg-gray-200 hover:bg-gray-100";
         li.addEventListener("click", () => {
