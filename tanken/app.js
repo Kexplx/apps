@@ -365,6 +365,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
 
   function applyFuelMenuCollapsed() {
     fuelTypeSwitcher.style.display = fuelMenuCollapsed ? "none" : "flex";
+    fuelMenuLabel.style.display = fuelMenuCollapsed ? "inline" : "none";
     fuelMenuToggleIcon.style.transform = fuelMenuCollapsed
       ? "rotate(180deg)"
       : "rotate(0deg)";
@@ -373,19 +374,6 @@ const stationTemplate = (s, czechPrice, fuelType) => {
   fuelMenuToggle.style.display = "flex";
   fuelMenuToggle.addEventListener("click", () => {
     fuelMenuCollapsed = !fuelMenuCollapsed;
-    localStorage.setItem(collapseStorageKey, String(fuelMenuCollapsed));
-    applyFuelMenuCollapsed();
-  });
-
-  document.addEventListener("click", (event) => {
-    if (fuelMenuCollapsed) return;
-    if (
-      fuelTypeSwitcher.contains(event.target) ||
-      fuelMenuToggle.contains(event.target)
-    ) {
-      return;
-    }
-    fuelMenuCollapsed = true;
     localStorage.setItem(collapseStorageKey, String(fuelMenuCollapsed));
     applyFuelMenuCollapsed();
   });
@@ -431,7 +419,8 @@ const stationTemplate = (s, czechPrice, fuelType) => {
     applyFuelMenuCollapsed();
 
     fuelTypeSwitcher.querySelectorAll("[data-fuel-type]").forEach((button) => {
-      button.addEventListener("click", () => {
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
         const nextFuelType = button.getAttribute("data-fuel-type");
         if (!nextFuelType || nextFuelType === selectedFuelType) return;
 
