@@ -149,6 +149,42 @@ const stationsByUser = {
       prices: { diesel: 0, e10: 0, e5: 0 },
       pricesUpdatedTime: "",
     },
+    {
+      id: "straubing-geiselhoeringer-strasse-65-jet-straubin",
+      name: "JET",
+      city: "Straubing, Geiselhöringer Str.",
+      color: "#d08700",
+      initialFuelType: "diesel",
+      prices: { diesel: 0, e10: 0, e5: 0 },
+      pricesUpdatedTime: "",
+    },
+    {
+      id: "straubing-ittlinger-str-straubing-ittlinger-str",
+      name: "HEM",
+      city: "Straubing, Ittlinger Str.",
+      color: "#00a63e",
+      initialFuelType: "diesel",
+      prices: { diesel: 0, e10: 0, e5: 0 },
+      pricesUpdatedTime: "",
+    },
+    {
+      id: "520",
+      name: "AGIP ENI",
+      city: "Straubing, Chamer Str.",
+      color: "#d08700",
+      initialFuelType: "diesel",
+      prices: { diesel: 0, e10: 0, e5: 0 },
+      pricesUpdatedTime: "",
+    },
+    {
+      id: "47704",
+      name: "Wurm (frei)",
+      city: "Bogen, Bärndorf",
+      color: "#e7000b",
+      initialFuelType: "diesel",
+      prices: { diesel: 0, e10: 0, e5: 0 },
+      pricesUpdatedTime: "",
+    },
   ],
 };
 
@@ -321,6 +357,38 @@ const stationTemplate = (s, czechPrice, fuelType) => {
 
   const container = document.getElementById("stationContainer");
   const fuelTypeSwitcher = document.getElementById("fuelTypeSwitcher");
+  const fuelMenuToggle = document.getElementById("fuelMenuToggle");
+  const fuelMenuToggleIcon = fuelMenuToggle.querySelector("svg");
+  const fuelMenuLabel = document.getElementById("fuelMenuLabel");
+  const collapseStorageKey = "fuelMenuCollapsed";
+  let fuelMenuCollapsed = localStorage.getItem(collapseStorageKey) === "true";
+
+  function applyFuelMenuCollapsed() {
+    fuelTypeSwitcher.style.display = fuelMenuCollapsed ? "none" : "flex";
+    fuelMenuToggleIcon.style.transform = fuelMenuCollapsed
+      ? "rotate(180deg)"
+      : "rotate(0deg)";
+  }
+
+  fuelMenuToggle.style.display = "flex";
+  fuelMenuToggle.addEventListener("click", () => {
+    fuelMenuCollapsed = !fuelMenuCollapsed;
+    localStorage.setItem(collapseStorageKey, String(fuelMenuCollapsed));
+    applyFuelMenuCollapsed();
+  });
+
+  document.addEventListener("click", (event) => {
+    if (fuelMenuCollapsed) return;
+    if (
+      fuelTypeSwitcher.contains(event.target) ||
+      fuelMenuToggle.contains(event.target)
+    ) {
+      return;
+    }
+    fuelMenuCollapsed = true;
+    localStorage.setItem(collapseStorageKey, String(fuelMenuCollapsed));
+    applyFuelMenuCollapsed();
+  });
 
   function renderStations(fuelType) {
     const sortedStations = [...stations].sort((a, b) => {
@@ -350,7 +418,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
       .map(
         (fuelType) => `
           <button
-            class="text-gray-500 w-20 py-1.5 border border-transparent text-xl ${fuelType === activeFuelType ? "bg-blue-950 border-blue-800! rounded text-white" : " "}"
+            class="w-16 py-1 border rounded-md text-sm transition-colors ${fuelType === activeFuelType ? "border-blue-700 border bg-blue-950 text-white font-semibold" : "border-transparent text-neutral-300 hover:text-neutral-100 "}"
             data-fuel-type="${fuelType}"
             type="button"
           >
@@ -359,6 +427,8 @@ const stationTemplate = (s, czechPrice, fuelType) => {
         `,
       )
       .join("");
+    fuelMenuLabel.textContent = toTitleCase(activeFuelType);
+    applyFuelMenuCollapsed();
 
     fuelTypeSwitcher.querySelectorAll("[data-fuel-type]").forEach((button) => {
       button.addEventListener("click", () => {
