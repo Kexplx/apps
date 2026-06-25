@@ -22,15 +22,16 @@
   >
     <div
       id="fuelTypeSwitcher"
-      class="fixed hidden -bottom-3 left-1/2 -translate-x-1/2 z-50 items-center gap-2 rounded-full border border-neutral-700 bg-neutral-900/60 px-2 py-1 shadow-lg backdrop-blur transition-all duration-300"
+      class="fixed hidden top-16 right-4 z-50 flex-col items-center gap-1.5 rounded-lg border border-neutral-700 bg-neutral-900/60 p-1.5 shadow-lg backdrop-blur transition-all duration-300"
     ></div>
 
     <button
       id="fuelMenuToggle"
       type="button"
       aria-label="Kraftstoffauswahl ein-/ausblenden"
-      class="fixed hidden -bottom-3 right-4 z-50 h-12 w-8 items-center justify-center transition-colors text-neutral-500"
+      class="fixed hidden top-4 right-4 z-50 h-10 items-center justify-center gap-1 transition-colors text-neutral-500"
     >
+      <span id="fuelMenuLabel" class="text-sm text-neutral-500"></span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="24px"
@@ -39,7 +40,7 @@
         fill="currentColor"
         class="transition-transform duration-300"
       >
-        <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+        <path d="M480-528 296-344l-56-56 240-240 240 240-56 56-184-184Z" />
       </svg>
     </button>
 

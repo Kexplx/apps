@@ -359,6 +359,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
   const fuelTypeSwitcher = document.getElementById("fuelTypeSwitcher");
   const fuelMenuToggle = document.getElementById("fuelMenuToggle");
   const fuelMenuToggleIcon = fuelMenuToggle.querySelector("svg");
+  const fuelMenuLabel = document.getElementById("fuelMenuLabel");
   const collapseStorageKey = "fuelMenuCollapsed";
   let fuelMenuCollapsed = localStorage.getItem(collapseStorageKey) === "true";
 
@@ -372,6 +373,19 @@ const stationTemplate = (s, czechPrice, fuelType) => {
   fuelMenuToggle.style.display = "flex";
   fuelMenuToggle.addEventListener("click", () => {
     fuelMenuCollapsed = !fuelMenuCollapsed;
+    localStorage.setItem(collapseStorageKey, String(fuelMenuCollapsed));
+    applyFuelMenuCollapsed();
+  });
+
+  document.addEventListener("click", (event) => {
+    if (fuelMenuCollapsed) return;
+    if (
+      fuelTypeSwitcher.contains(event.target) ||
+      fuelMenuToggle.contains(event.target)
+    ) {
+      return;
+    }
+    fuelMenuCollapsed = true;
     localStorage.setItem(collapseStorageKey, String(fuelMenuCollapsed));
     applyFuelMenuCollapsed();
   });
@@ -404,7 +418,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
       .map(
         (fuelType) => `
           <button
-            class="w-20 py-1.5 border rounded-full text-base transition-colors ${fuelType === activeFuelType ? "border-blue-700 border bg-blue-950 text-white font-semibold" : "border-transparent text-neutral-300 hover:text-neutral-100 "}"
+            class="w-16 py-1 border rounded-md text-sm transition-colors ${fuelType === activeFuelType ? "border-blue-700 border bg-blue-950 text-white font-semibold" : "border-transparent text-neutral-300 hover:text-neutral-100 "}"
             data-fuel-type="${fuelType}"
             type="button"
           >
@@ -413,6 +427,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
         `,
       )
       .join("");
+    fuelMenuLabel.textContent = toTitleCase(activeFuelType);
     applyFuelMenuCollapsed();
 
     fuelTypeSwitcher.querySelectorAll("[data-fuel-type]").forEach((button) => {
