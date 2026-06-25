@@ -357,6 +357,24 @@ const stationTemplate = (s, czechPrice, fuelType) => {
 
   const container = document.getElementById("stationContainer");
   const fuelTypeSwitcher = document.getElementById("fuelTypeSwitcher");
+  const fuelMenuToggle = document.getElementById("fuelMenuToggle");
+  const fuelMenuToggleIcon = fuelMenuToggle.querySelector("svg");
+  const collapseStorageKey = "fuelMenuCollapsed";
+  let fuelMenuCollapsed = localStorage.getItem(collapseStorageKey) === "true";
+
+  function applyFuelMenuCollapsed() {
+    fuelTypeSwitcher.style.display = fuelMenuCollapsed ? "none" : "flex";
+    fuelMenuToggleIcon.style.transform = fuelMenuCollapsed
+      ? "rotate(180deg)"
+      : "rotate(0deg)";
+  }
+
+  fuelMenuToggle.style.display = "flex";
+  fuelMenuToggle.addEventListener("click", () => {
+    fuelMenuCollapsed = !fuelMenuCollapsed;
+    localStorage.setItem(collapseStorageKey, String(fuelMenuCollapsed));
+    applyFuelMenuCollapsed();
+  });
 
   function renderStations(fuelType) {
     const sortedStations = [...stations].sort((a, b) => {
@@ -395,7 +413,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
         `,
       )
       .join("");
-    fuelTypeSwitcher.style.display = "flex";
+    applyFuelMenuCollapsed();
 
     fuelTypeSwitcher.querySelectorAll("[data-fuel-type]").forEach((button) => {
       button.addEventListener("click", () => {

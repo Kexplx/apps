@@ -17,13 +17,31 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="green" />
   </head>
   <body
-    class="bg-neutral-950 text-neutral-200 pt-10 pb-24 flex flex-col items-center justify-center space-y-10"
+    class="bg-neutral-950 text-neutral-500 pt-10 pb-24 flex flex-col items-center justify-center space-y-10"
     style="touch-action: manipulation"
   >
     <div
       id="fuelTypeSwitcher"
-      class="fixed hidden -bottom-3 left-1/2 -translate-x-1/2 z-50 items-center gap-2 rounded-full border border-neutral-700 bg-neutral-900/60 px-2 py-1 shadow-lg backdrop-blur"
+      class="fixed hidden -bottom-3 left-1/2 -translate-x-1/2 z-50 items-center gap-2 rounded-full border border-neutral-700 bg-neutral-900/60 px-2 py-1 shadow-lg backdrop-blur transition-all duration-300"
     ></div>
+
+    <button
+      id="fuelMenuToggle"
+      type="button"
+      aria-label="Kraftstoffauswahl ein-/ausblenden"
+      class="fixed hidden -bottom-3 right-4 z-50 h-12 w-8 items-center justify-center transition-colors"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24px"
+        viewBox="0 -960 960 960"
+        width="24px"
+        fill="currentColor"
+        class="transition-transform duration-300"
+      >
+        <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+      </svg>
+    </button>
 
     <div
       id="stationContainer"
