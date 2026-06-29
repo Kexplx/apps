@@ -1,7 +1,11 @@
-const encodedScrapeUrls_base64 = {
+const encodedUrls_base64 = {
+  proxy:
+    "aHR0cHM6Ly9pcjZqZGIwcThpLmV4ZWN1dGUtYXBpLmV1LWNlbnRyYWwtMS5hbWF6b25hd3MuY29tL2RlZmF1bHQvb3NjYXItY29ycy1wcm94eQ==",
   clvtnkn: "aHR0cHM6Ly93d3cuY2xldmVyLXRhbmtlbi5kZS90YW5rc3RlbGxlX2RldGFpbHMv",
   czech: "aHR0cHM6Ly93d3cudGFuay1vbm8uY3ovZGUvaW5kZXgucGhwP3BhZ2U9Y2VuaWs=",
 };
+
+const proxyApiTokenEncoded = "N2M5Mjc4NjUtOWIwZi00MDJmLTk5MDMtNTU3Yjg1Y2ZkNmI5";
 
 const stationsByUser = {
   oscar: [
@@ -38,7 +42,7 @@ const stationsByUser = {
       id: "13347",
       name: "Brey",
       city: "Chamerau",
-      locationUrl: `${encodedScrapeUrls_base64.clvtnkn}13347`,
+      locationUrl: `${encodedUrls_base64.clvtnkn}13347`,
       color: "#f54900",
       initialFuelType: "diesel",
       prices: { diesel: 0, e10: 0, e5: 0 },
@@ -207,7 +211,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
           <p class="text-6xl tracking-tight font-medium" style="color:${
             s.color
           }">
-            <a target="_blank" href="${atob(encodedScrapeUrls_base64.clvtnkn)}${
+            <a target="_blank" href="${atob(encodedUrls_base64.clvtnkn)}${
               s.id
             }">
               ${s.name}
@@ -234,7 +238,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
               ? `
                 <div class="text-neutral-400 text-xl -mt-1">
                   Tschechienpreis: 
-                  <a target="_blank"  href="${atob(encodedScrapeUrls_base64.czech)}">
+                  <a target="_blank"  href="${atob(encodedUrls_base64.czech)}">
                     ${czechPrice.toFixed(2).replace(".", ",")} €
                   </a>
                 </div>
@@ -246,7 +250,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
                 ? `
                 <div class="text-neutral-400 text-xl -mt-1">
                   Tschechienpreis: 
-                  <a target="_blank"  href="${atob(encodedScrapeUrls_base64.czech)}">
+                  <a target="_blank"  href="${atob(encodedUrls_base64.czech)}">
                     ${czechPrice.toFixed(2).replace(".", ",")} €
                   </a>
                 </div>
@@ -286,8 +290,10 @@ const stationTemplate = (s, czechPrice, fuelType) => {
   const czechPrices = await fetchCzechPrices();
 
   async function fetchPrices(stationId) {
-    const url = `https://europe-west3-crimeview.cloudfunctions.net/handleGet?url=${atob(encodedScrapeUrls_base64.clvtnkn)}${stationId}`;
-    const response = await fetch(url);
+    const url = `${atob(encodedUrls_base64.proxy)}?url=${atob(encodedUrls_base64.clvtnkn)}${stationId}`;
+    const response = await fetch(url, {
+      headers: { "x-api-token": atob(proxyApiTokenEncoded) },
+    });
     const html = await response.text();
 
     const r = {
@@ -327,8 +333,10 @@ const stationTemplate = (s, czechPrice, fuelType) => {
   }
 
   async function fetchCzechPrices() {
-    const url = `https://europe-west3-crimeview.cloudfunctions.net/handleGet?url=${atob(encodedScrapeUrls_base64.czech)}`;
-    const response = await fetch(url);
+    const url = `${atob(encodedUrls_base64.proxy)}?url=${atob(encodedUrls_base64.czech)}`;
+    const response = await fetch(url, {
+      headers: { "x-api-token": atob(proxyApiTokenEncoded) },
+    });
     const html = await response.text();
 
     const parser = new DOMParser();
@@ -406,7 +414,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
       .map(
         (fuelType) => `
           <button
-            class="w-16 py-1 border rounded-md text-sm transition-colors ${fuelType === activeFuelType ? "border-blue-700 border bg-blue-950 text-white font-semibold" : "border-transparent text-neutral-300 hover:text-neutral-100 "}"
+            class="w-18 p-2 px-4 border rounded-md transition-colors ${fuelType === activeFuelType ? "border-blue-700 border bg-blue-950 text-white font-semibold" : "border-transparent text-neutral-300 hover:text-neutral-100 "}"
             data-fuel-type="${fuelType}"
             type="button"
           >
