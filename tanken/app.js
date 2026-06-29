@@ -414,7 +414,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
       .map(
         (fuelType) => `
           <button
-            class="w-18 p-2 px-4 border rounded-md transition-colors ${fuelType === activeFuelType ? "border-blue-700 border bg-blue-950 text-white font-semibold" : "border-transparent text-neutral-300 hover:text-neutral-100 "}"
+            class="w-20 py-2 border rounded-lg transition-colors ${fuelType === activeFuelType ? "border-blue-600 border bg-blue-950 text-white font-semibold" : "border-transparent text-neutral-300 hover:text-neutral-100 "}"
             data-fuel-type="${fuelType}"
             type="button"
           >
