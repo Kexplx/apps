@@ -373,7 +373,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
 
   function applyFuelMenuCollapsed() {
     fuelTypeSwitcher.style.display = fuelMenuCollapsed ? "none" : "flex";
-    fuelMenuLabel.style.display = fuelMenuCollapsed ? "inline" : "none";
+    fuelMenuLabel.style.visibility = fuelMenuCollapsed ? "visible" : "hidden";
     fuelMenuToggleIcon.style.transform = fuelMenuCollapsed
       ? "rotate(180deg)"
       : "rotate(0deg)";
