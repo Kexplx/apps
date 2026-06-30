@@ -8,9 +8,8 @@ const urls = {
   ),
 };
 
-const proxyApiKey_dev = "test_f95aa8768704af2c34447abdd43436778a4949308559fba2";
-const proxyApiKey_prod =
-  "live_ecbd6d11c668d47c1a6e5fbb84d09d4ba761f1e926e6f324";
+const proxyApiKey_dev = `test_f95aa8768704af2c34447abdd43436778a4949308559fba2`;
+const proxyApiKey_prod = `live_ecbd6d11c668d47c1a6e5fbb84d09d4ba761f1e926e6f324`;
 
 const proxyApiKeyToUseAtRuntime =
   window.location.protocol === "https:" ? proxyApiKey_prod : proxyApiKey_dev;
@@ -464,4 +463,10 @@ const stationTemplate = (s, czechPrice, fuelType) => {
   renderFuelTypeButtons(selectedFuelType);
   fuelMenuToggle.style.display = "flex";
   renderStations(selectedFuelType);
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      window.location.reload();
+    }
+  });
 })();
