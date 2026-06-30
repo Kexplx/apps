@@ -1,11 +1,19 @@
-const encodedUrls_base64 = {
-  proxy:
-    "aHR0cHM6Ly9pcjZqZGIwcThpLmV4ZWN1dGUtYXBpLmV1LWNlbnRyYWwtMS5hbWF6b25hd3MuY29tL2RlZmF1bHQvb3NjYXItY29ycy1wcm94eQ==",
-  clvtnkn: "aHR0cHM6Ly93d3cuY2xldmVyLXRhbmtlbi5kZS90YW5rc3RlbGxlX2RldGFpbHMv",
-  czech: "aHR0cHM6Ly93d3cudGFuay1vbm8uY3ovZGUvaW5kZXgucGhwP3BhZ2U9Y2VuaWs=",
+const urls = {
+  proxy: "https://proxy.cors.sh/",
+  clvtnkn: atob(
+    "aHR0cHM6Ly93d3cuY2xldmVyLXRhbmtlbi5kZS90YW5rc3RlbGxlX2RldGFpbHMv",
+  ),
+  czech: atob(
+    "aHR0cHM6Ly93d3cudGFuay1vbm8uY3ovZGUvaW5kZXgucGhwP3BhZ2U9Y2VuaWs=",
+  ),
 };
 
-const proxyApiTokenEncoded = "N2M5Mjc4NjUtOWIwZi00MDJmLTk5MDMtNTU3Yjg1Y2ZkNmI5";
+const proxyApiKey_dev = "test_f95aa8768704af2c34447abdd43436778a4949308559fba2";
+const proxyApiKey_prod =
+  "live_ecbd6d11c668d47c1a6e5fbb84d09d4ba761f1e926e6f324";
+
+const proxyApiKeyToUseAtRuntime =
+  window.location.protocol === "https:" ? proxyApiKey_prod : proxyApiKey_dev;
 
 const stationsByUser = {
   oscar: [
@@ -42,7 +50,7 @@ const stationsByUser = {
       id: "13347",
       name: "Brey",
       city: "Chamerau",
-      locationUrl: `${encodedUrls_base64.clvtnkn}13347`,
+      locationUrl: `${urls.clvtnkn}13347`,
       color: "#f54900",
       initialFuelType: "diesel",
       prices: { diesel: 0, e10: 0, e5: 0 },
@@ -211,9 +219,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
           <p class="text-6xl tracking-tight font-medium" style="color:${
             s.color
           }">
-            <a target="_blank" href="${atob(encodedUrls_base64.clvtnkn)}${
-              s.id
-            }">
+            <a target="_blank" href="${urls.clvtnkn}${s.id}">
               ${s.name}
             </a>
           </p>
@@ -238,7 +244,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
               ? `
                 <div class="text-neutral-400 text-xl -mt-1">
                   Tschechienpreis: 
-                  <a target="_blank"  href="${atob(encodedUrls_base64.czech)}">
+                  <a target="_blank"  href="${urls.czech}">
                     ${czechPrice.toFixed(2).replace(".", ",")} €
                   </a>
                 </div>
@@ -250,7 +256,7 @@ const stationTemplate = (s, czechPrice, fuelType) => {
                 ? `
                 <div class="text-neutral-400 text-xl -mt-1">
                   Tschechienpreis: 
-                  <a target="_blank"  href="${atob(encodedUrls_base64.czech)}">
+                  <a target="_blank"  href="${urls.czech}">
                     ${czechPrice.toFixed(2).replace(".", ",")} €
                   </a>
                 </div>
@@ -287,12 +293,12 @@ const stationTemplate = (s, czechPrice, fuelType) => {
     }),
   );
 
-  const czechPrices = await fetchCzechPrices();
+  let czechPrices = await fetchCzechPrices();
 
   async function fetchPrices(stationId) {
-    const url = `${atob(encodedUrls_base64.proxy)}?url=${atob(encodedUrls_base64.clvtnkn)}${stationId}`;
+    const url = `${urls.proxy}${urls.clvtnkn}${stationId}`;
     const response = await fetch(url, {
-      headers: { "x-api-token": atob(proxyApiTokenEncoded) },
+      headers: { "x-cors-api-key": proxyApiKeyToUseAtRuntime },
     });
     const html = await response.text();
 
@@ -333,9 +339,9 @@ const stationTemplate = (s, czechPrice, fuelType) => {
   }
 
   async function fetchCzechPrices() {
-    const url = `${atob(encodedUrls_base64.proxy)}?url=${atob(encodedUrls_base64.czech)}`;
+    const url = `${urls.proxy}${urls.czech}`;
     const response = await fetch(url, {
-      headers: { "x-api-token": atob(proxyApiTokenEncoded) },
+      headers: { "x-cors-api-key": proxyApiKeyToUseAtRuntime },
     });
     const html = await response.text();
 
@@ -358,8 +364,9 @@ const stationTemplate = (s, czechPrice, fuelType) => {
 
     return {
       diesel: isNaN(valueDiesel) ? null : valueDiesel,
-      e5: isNaN(valueGasoline) ? null : valueGasoline, // czech doesnt have e5 or e10
-      e10: isNaN(valueGasoline) ? null : valueGasoline, // czech doesnt have e5 or e10
+      // czech doesn't differentiate between e5 and e10, so we use the same value for both
+      e5: isNaN(valueGasoline) ? null : valueGasoline,
+      e10: isNaN(valueGasoline) ? null : valueGasoline,
     };
   }
 
@@ -442,4 +449,17 @@ const stationTemplate = (s, czechPrice, fuelType) => {
 
   renderFuelTypeButtons(selectedFuelType);
   renderStations(selectedFuelType);
+
+  // fetch prices in the background and re-render (re-sorting) as each resolves
+  stations.forEach(async (station) => {
+    const { prices, lastUpdated } = await fetchPrices(station.id);
+    station.prices = prices;
+    station.pricesUpdatedTime = lastUpdated;
+    renderStations(selectedFuelType);
+  });
+
+  fetchCzechPrices().then((prices) => {
+    czechPrices = prices;
+    renderStations(selectedFuelType);
+  });
 })();
