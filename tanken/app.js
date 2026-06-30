@@ -464,8 +464,16 @@ const stationTemplate = (s, czechPrice, fuelType) => {
   fuelMenuToggle.style.display = "flex";
   renderStations(selectedFuelType);
 
-  document.addEventListener("visibilitychange", () => {
+  // reload the page when the user switches back to the tab or window
+  function reloadIfVisible() {
     if (document.visibilityState === "visible") {
+      window.location.reload();
+    }
+  }
+  document.addEventListener("visibilitychange", reloadIfVisible);
+  window.addEventListener("focus", reloadIfVisible);
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
       window.location.reload();
     }
   });
