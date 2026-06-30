@@ -284,12 +284,6 @@ const stationTemplate = (s, czechPrice, fuelType) => {
 
   localStorage.setItem(storageKey, selectedFuelType);
 
-  // start with empty prices so stations render immediately as placeholders
-  stations.forEach((station) => {
-    station.prices = { diesel: null, e10: null, e5: null };
-    station.pricesUpdatedTime = "";
-  });
-
   let czechPrices = null;
 
   async function fetchPrices(stationId) {
@@ -383,7 +377,6 @@ const stationTemplate = (s, czechPrice, fuelType) => {
       : "rotate(0deg)";
   }
 
-  fuelMenuToggle.style.display = "flex";
   fuelMenuToggle.addEventListener("click", () => {
     fuelMenuCollapsed = !fuelMenuCollapsed;
     localStorage.setItem(collapseStorageKey, String(fuelMenuCollapsed));
@@ -444,19 +437,18 @@ const stationTemplate = (s, czechPrice, fuelType) => {
     });
   }
 
+  // fetch all prices, then render everything at once
+  await Promise.all(
+    stations.map(async (station) => {
+      const { prices, lastUpdated } = await fetchPrices(station.id);
+      station.prices = prices;
+      station.pricesUpdatedTime = lastUpdated;
+    }),
+  );
+
+  czechPrices = await fetchCzechPrices();
+
   renderFuelTypeButtons(selectedFuelType);
+  fuelMenuToggle.style.display = "flex";
   renderStations(selectedFuelType);
-
-  // fetch prices in the background and re-render (re-sorting) as each resolves
-  stations.forEach(async (station) => {
-    const { prices, lastUpdated } = await fetchPrices(station.id);
-    station.prices = prices;
-    station.pricesUpdatedTime = lastUpdated;
-    renderStations(selectedFuelType);
-  });
-
-  fetchCzechPrices().then((prices) => {
-    czechPrices = prices;
-    renderStations(selectedFuelType);
-  });
 })();
