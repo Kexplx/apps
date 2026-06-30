@@ -284,16 +284,13 @@ const stationTemplate = (s, czechPrice, fuelType) => {
 
   localStorage.setItem(storageKey, selectedFuelType);
 
-  // fetch prices
-  await Promise.all(
-    stations.map(async (station) => {
-      const { prices, lastUpdated } = await fetchPrices(station.id);
-      station.prices = prices;
-      station.pricesUpdatedTime = lastUpdated;
-    }),
-  );
+  // start with empty prices so stations render immediately as placeholders
+  stations.forEach((station) => {
+    station.prices = { diesel: null, e10: null, e5: null };
+    station.pricesUpdatedTime = "";
+  });
 
-  let czechPrices = await fetchCzechPrices();
+  let czechPrices = null;
 
   async function fetchPrices(stationId) {
     const url = `${urls.proxy}${urls.clvtnkn}${stationId}`;
