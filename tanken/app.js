@@ -438,15 +438,28 @@ const stationTemplate = (s, czechPrice, fuelType) => {
   }
 
   // fetch all prices, then render everything at once
+  const loadingCounter = document.getElementById("loadingCounter");
+  let loadedCount = 0;
+  if (loadingCounter) {
+    loadingCounter.textContent = `Lade Tankstellen (0/${stations.length})`;
+  }
+
+  // start the czech price fetch in parallel with the station prices
+  const czechPricesPromise = fetchCzechPrices();
+
   await Promise.all(
     stations.map(async (station) => {
       const { prices, lastUpdated } = await fetchPrices(station.id);
       station.prices = prices;
       station.pricesUpdatedTime = lastUpdated;
+      loadedCount += 1;
+      if (loadingCounter) {
+        loadingCounter.textContent = `Lade Tankstellen (${loadedCount}/${stations.length})`;
+      }
     }),
   );
 
-  czechPrices = await fetchCzechPrices();
+  czechPrices = await czechPricesPromise;
 
   renderFuelTypeButtons(selectedFuelType);
   fuelMenuToggle.style.display = "flex";
