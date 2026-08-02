@@ -161,6 +161,15 @@ const stationsByUser = {
       pricesUpdatedTime: "",
     },
     {
+      id: "42298",
+      name: "HEM",
+      city: "Regensburg, Obertraublinger Str.",
+      color: "#00a63e",
+      initialFuelType: "e10",
+      prices: { diesel: 0, e10: 9.999, e5: 0 },
+      pricesUpdatedTime: "heute, 12:15 Uhr",
+    },
+    {
       id: "straubing-geiselhoeringer-strasse-65-jet-straubin",
       name: "JET",
       city: "Straubing, Geiselhöringer Str.",
@@ -465,16 +474,21 @@ const stationTemplate = (s, czechPrice, fuelType) => {
   renderStations(selectedFuelType);
 
   // reload the page when the user switches back to the tab or window
-  function reloadIfVisible() {
-    if (document.visibilityState === "visible") {
-      window.location.reload();
-    }
+  // (disabled under http, e.g. local development)
+  const isHttp = window.location.protocol === "http:";
+
+  if (!isHttp) {
+    const reloadIfVisible = () => {
+      if (document.visibilityState === "visible") {
+        window.location.reload();
+      }
+    };
+    document.addEventListener("visibilitychange", reloadIfVisible);
+    window.addEventListener("focus", reloadIfVisible);
+    window.addEventListener("pageshow", (event) => {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    });
   }
-  document.addEventListener("visibilitychange", reloadIfVisible);
-  window.addEventListener("focus", reloadIfVisible);
-  window.addEventListener("pageshow", (event) => {
-    if (event.persisted) {
-      window.location.reload();
-    }
-  });
 })();
