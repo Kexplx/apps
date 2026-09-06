@@ -1,5 +1,6 @@
 const urls = {
-  proxy: "https://proxy.cors.sh/",
+  proxy:
+    "https://ir6jdb0q8i.execute-api.eu-central-1.amazonaws.com/default/oscar-cors-proxy",
   clvtnkn: atob(
     "aHR0cHM6Ly93d3cuY2xldmVyLXRhbmtlbi5kZS90YW5rc3RlbGxlX2RldGFpbHMv",
   ),
@@ -8,11 +9,7 @@ const urls = {
   ),
 };
 
-const proxyApiKey_dev = `test_f95aa8768704af2c34447abdd43436778a4949308559fba2`;
-const proxyApiKey_prod = `live_ecbd6d11c668d47c1a6e5fbb84d09d4ba761f1e926e6f324`;
-
-const proxyApiKeyToUseAtRuntime =
-  window.location.protocol === "https:" ? proxyApiKey_prod : proxyApiKey_dev;
+const proxyApiToken = "7c927865-9b0f-402f-9903-557b85cfd6b9";
 
 const stationsByUser = {
   oscar: [
@@ -295,9 +292,10 @@ const stationTemplate = (s, czechPrice, fuelType) => {
   let czechPrices = null;
 
   async function fetchPrices(stationId) {
-    const url = `${urls.proxy}${urls.clvtnkn}${stationId}`;
+    const targetUrl = `${urls.clvtnkn}${stationId}`;
+    const url = `${urls.proxy}?url=${encodeURIComponent(targetUrl)}`;
     const response = await fetch(url, {
-      headers: { "x-cors-api-key": proxyApiKeyToUseAtRuntime },
+      headers: { "x-api-token": proxyApiToken },
     });
     const html = await response.text();
 
@@ -338,9 +336,9 @@ const stationTemplate = (s, czechPrice, fuelType) => {
   }
 
   async function fetchCzechPrices() {
-    const url = `${urls.proxy}${urls.czech}`;
+    const url = `${urls.proxy}?url=${encodeURIComponent(urls.czech)}`;
     const response = await fetch(url, {
-      headers: { "x-cors-api-key": proxyApiKeyToUseAtRuntime },
+      headers: { "x-api-token": proxyApiToken },
     });
     const html = await response.text();
 
