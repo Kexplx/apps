@@ -54,7 +54,7 @@
         const match = value
           .trim()
           .match(
-            /^https?:\/\/raider\.io\/characters\/([^/]+)\/([^/]+)\/([^/?#]+)(?:[?#].*)?$/i,
+            /^https?:\/\/raider\.io\/(?:[a-z]{2}(?:-[a-z]{2})?\/)?characters\/([^/]+)\/([^/]+)\/([^/?#]+)(?:[?#].*)?$/i,
           );
 
         if (!match) return;
